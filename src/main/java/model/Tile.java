@@ -35,6 +35,15 @@ public class Tile {
         return result;
     }
 
+    public boolean isEmpty(){
+        return mapObjects.isEmpty();
+    }
+
+    public void addMapObject(MapObject mapObject){
+        mapObjects.add(mapObject);
+        mapObject.setTile(this);
+    }
+
     public TileType getType() {
         return type;
     }

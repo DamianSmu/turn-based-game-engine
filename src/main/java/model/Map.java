@@ -39,13 +39,17 @@ public class Map {
     }
     public static void saveToPNG(Map map) throws IOException {
         Image imageFlag = ImageIO.read(new File("flag.png"));
-        Image imageSettlement = ImageIO.read(new File("castleWide.png"));
+        Image imageSettlement = ImageIO.read(new File("castle.png"));
 
         int size = map.getSize();
         int texSize = 64;
         Tile[][] tiles = map.getTileMatrix();
         BufferedImage image = new BufferedImage(size * texSize, size * texSize, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = (Graphics2D) image.getGraphics();
+        Font currentFont = g.getFont();
+        Font newFont = currentFont.deriveFont(currentFont.getSize() * 1.8f);
+        g.setColor(Color.BLACK);
+        g.setFont(newFont);
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
                 //TileTypes

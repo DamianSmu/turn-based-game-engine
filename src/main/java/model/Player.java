@@ -1,15 +1,17 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Player {
     private String name;
-    private Set<MapObject> mapObjects;
+    private List<MapObject> mapObjects;
 
     public Player(String name) {
         this.name = name;
-        mapObjects = new HashSet<>();
+        mapObjects = new ArrayList<>();
     }
 
     public String getName() {
@@ -20,11 +22,11 @@ public class Player {
         this.name = name;
     }
 
-    public Set<MapObject> getMapObjects() {
+    public List<MapObject> getMapObjects() {
         return mapObjects;
     }
 
-    public void setMapObjects(Set<MapObject> mapObjects) {
+    public void setMapObjects(List<MapObject> mapObjects) {
         this.mapObjects = mapObjects;
     }
 }

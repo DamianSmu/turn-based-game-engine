@@ -10,6 +10,10 @@ public class MapObject {
         player.getMapObjects().add(this);
     }
 
+    public MapObject(Player player) {
+        this.player = player;
+    }
+
     public Tile getTile() {
         return tile;
     }
@@ -24,5 +28,10 @@ public class MapObject {
 
     public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    public void delete(){
+        player.getMapObjects().remove(this);
+        tile.getMapObjects().remove(this);
     }
 }
