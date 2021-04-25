@@ -8,14 +8,15 @@ public class MapTilesGenerator {
     private static final double FREQUENCY = 18d;
     private static final double LEVEL = 0.1d;
 
-    public static Tile[][] generate(Map map,int size) {
+    public static Tile[][] generate(Map map, int size) {
         OpenSimplex2S noise = new OpenSimplex2S(new Random().nextLong());
         Tile[][] result = new Tile[size][size];
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+
                 double value = noise.noise2(x / FREQUENCY, y / FREQUENCY);
                 TileType type = value < LEVEL ? TileType.WATER : TileType.LAND;
-                result[y][x] = new Tile(map, type, x, y);
+                result[x][y] = new Tile(map, type, x, y);
             }
         }
         return result;

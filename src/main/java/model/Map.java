@@ -18,11 +18,11 @@ public class Map {
         this.tileMatrix = MapTilesGenerator.generate(this, size);
     }
 
-    public Tile getTileXY(int x, int y){
-        return this.tileMatrix[y][x];
+    public Tile getTileXY(int x, int y) {
+        return this.tileMatrix[x][y];
     }
 
-        public int getSize() {
+    public int getSize() {
         return size;
     }
 
@@ -37,7 +37,8 @@ public class Map {
     public void setTileMatrix(Tile[][] tileMatrix) {
         this.tileMatrix = tileMatrix;
     }
-    public static void saveToPNG(Map map) throws IOException {
+
+    public static void saveToPNG(Map map, int turnNumber) throws IOException {
         Image imageFlag = ImageIO.read(new File("flag.png"));
         Image imageSettlement = ImageIO.read(new File("castle.png"));
 
@@ -47,11 +48,11 @@ public class Map {
         BufferedImage image = new BufferedImage(size * texSize, size * texSize, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = (Graphics2D) image.getGraphics();
         Font currentFont = g.getFont();
-        Font newFont = currentFont.deriveFont(currentFont.getSize() * 1.8f);
+        Font newFont = currentFont.deriveFont(currentFont.getSize() * 1.4f);
         g.setColor(Color.BLACK);
         g.setFont(newFont);
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
                 //TileTypes
                 int rgb = tiles[x][y].getType() == TileType.LAND ? 0x808080 : 0x99CCFF;
                 int[] rgbArr = new int[texSize * texSize];
@@ -69,7 +70,7 @@ public class Map {
                 }
             }
         }
-        ImageIO.write(image, "png", new File("map.png"));
+        ImageIO.write(image, "png", new File("map" + turnNumber + ".png"));
     }
 
 

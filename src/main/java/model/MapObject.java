@@ -22,6 +22,12 @@ public class MapObject {
         this.tile = tile;
     }
 
+    public void move(Tile tile) {
+        this.tile.deleteMapObject(this);
+        tile.addMapObject(this);
+        this.tile = tile;
+    }
+
     public Player getPlayer() {
         return player;
     }
@@ -30,7 +36,7 @@ public class MapObject {
         this.player = player;
     }
 
-    public void delete(){
+    public void delete() {
         player.getMapObjects().remove(this);
         tile.getMapObjects().remove(this);
     }

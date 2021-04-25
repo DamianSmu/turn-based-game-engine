@@ -1,6 +1,6 @@
 package model;
 
-public class Settlement extends MapObject{
+public class Settlement extends MapObject {
     private String name;
 
     public Settlement(Tile tile, Player player) {

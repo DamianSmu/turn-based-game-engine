@@ -1,8 +1,10 @@
 import model.Game;
 import model.Map;
 import model.Player;
+import model.actions.MoveUnit;
 import model.actions.PutOnSettlement;
 import model.units.Settlers;
+import model.units.Unit;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,11 +25,19 @@ public class Main {
             game.createInitialSettlersUnit(p);
         }
 
-        game.addUserAction(new PutOnSettlement((Settlers) players.get(0).getMapObjects().get(0)));
+        game.addUserAction(new PutOnSettlement((Settlers) playerA.getMapObjects().get(0)));
+
+        MoveUnit m = new MoveUnit(
+                (Unit) playerB.getMapObjects().get(0),
+                playerB.getMapObjects().get(0).getTile().getPosition().getX() + 2,
+                playerB.getMapObjects().get(0).getTile().getPosition().getY());
+
+        game.addUserAction(m);
+        Map.saveToPNG(game.getMap(), game.getTurnNumber());
         for (Player p : players) {
             game.takeTurn(p);
         }
-
-        Map.saveToPNG(game.getMap());
+        game.nextTurn();
+        Map.saveToPNG(game.getMap(), game.getTurnNumber());
     }
 }

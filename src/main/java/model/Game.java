@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 public class Game {
     private List<Player> players;
     private Map map;
-    private GameLog gameLog;
+    private final GameLog gameLog;
     private int turnNumber;
-    private List<UserAction> actions;
+    private final List<UserAction> actions;
 
     public Game() {
         this.players = new ArrayList<>();
@@ -53,14 +53,17 @@ public class Game {
         }
     }
 
-    public void takeTurn(Player player){
-        for(UserAction action : actions){
+    public void takeTurn(Player player) {
+        for (UserAction action : actions) {
             action.act(player, this);
         }
+    }
+
+    public void nextTurn() {
         turnNumber++;
     }
 
-    public void addUserAction(UserAction action){
+    public void addUserAction(UserAction action) {
         actions.add(action);
     }
 
