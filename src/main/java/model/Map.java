@@ -13,9 +13,9 @@ public class Map {
     private Tile[][] tileMatrix;
     private int size;
 
-    public Map(int size) {
+    public Map(int size, long seed) {
         this.size = size;
-        this.tileMatrix = MapTilesGenerator.generate(this, size);
+        this.tileMatrix = MapTilesGenerator.generate(this, size, seed);
     }
 
     public Tile getTileXY(int x, int y) {

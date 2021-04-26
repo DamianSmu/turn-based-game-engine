@@ -8,8 +8,8 @@ public class MapTilesGenerator {
     private static final double FREQUENCY = 18d;
     private static final double LEVEL = 0.1d;
 
-    public static Tile[][] generate(Map map, int size) {
-        OpenSimplex2S noise = new OpenSimplex2S(new Random().nextLong());
+    public static Tile[][] generate(Map map, int size, long seed) {
+        OpenSimplex2S noise = new OpenSimplex2S(seed);
         Tile[][] result = new Tile[size][size];
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {

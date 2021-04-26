@@ -5,10 +5,7 @@ import model.logs.GameLog;
 import model.logs.LogEntry;
 import model.units.Settlers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Game {
@@ -33,14 +30,14 @@ public class Game {
         }
     }
 
-    public void createInitialSettlersUnit(Player player) {
+    public void createInitialSettlersUnit(Player player, long seed) {
         Tile[][] tiles = this.map.getTileMatrix();
         List<Tile> list = Arrays
                 .stream(tiles)
                 .flatMap(Arrays::stream)
                 .filter(x -> x.getType() == TileType.LAND)
                 .collect(Collectors.toList());
-        Collections.shuffle(list);
+        Collections.shuffle(list, new Random(seed));
         boolean placed = false;
         int idx = 0;
         while (!placed) {
