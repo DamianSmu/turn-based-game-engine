@@ -3,15 +3,19 @@ package model;
 public class MapObject {
     private Tile tile;
     private Player player;
+    private int actionInTurnNumber;
 
     public MapObject(Tile tile, Player player) {
         this.tile = tile;
         this.player = player;
-        player.getMapObjects().add(this);
+        this.actionInTurnNumber = -1;
+        player.addMapObject(this);
     }
 
     public MapObject(Player player) {
         this.player = player;
+        this.actionInTurnNumber = -1;
+        player.addMapObject(this);
     }
 
     public Tile getTile() {
@@ -39,5 +43,13 @@ public class MapObject {
     public void delete() {
         player.getMapObjects().remove(this);
         tile.getMapObjects().remove(this);
+    }
+
+    public int actionInTurnNumber() {
+        return actionInTurnNumber;
+    }
+
+    public void setActionInTurnNumber(int turnNumber) {
+        this.actionInTurnNumber = turnNumber;
     }
 }

@@ -2,7 +2,7 @@ package model.actions;
 
 import model.Game;
 import model.Player;
-import model.PositionXY;
+import model.utils.PositionXY;
 import model.Tile;
 import model.logs.GameLog;
 import model.logs.LogEntry;

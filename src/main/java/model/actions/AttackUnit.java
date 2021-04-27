@@ -2,11 +2,13 @@ package model.actions;
 
 import model.Game;
 import model.Player;
-import model.PositionXY;
+import model.utils.PositionXY;
 import model.Tile;
 import model.logs.GameLog;
 import model.logs.LogEntry;
 import model.units.Unit;
+
+import java.util.Random;
 
 public class AttackUnit implements UserAction {
     private final Unit attacker;
@@ -36,10 +38,21 @@ public class AttackUnit implements UserAction {
             return;
         }
 
-        //TODO
+        Random rand = new Random();
+        attacked.setDefence(attacked.getDefence() - attacker.getOffence() * (rand.nextDouble() + 0.5d));
+        attacker.setDefence(attacker.getDefence() - attacked.getOffence() * (rand.nextDouble() + 0.5d));
 
-        Tile newTile = game.getMap().getTileXY(attackedPos.getX(), attackedPos.getY());
-        attacker.move(newTile);
-        attacker.setActionInTurnNumber(game.getTurnNumber());
+        if(attacked.getDefence() <= 0){
+            attacker.move(attacked.getTile());
+            attacked.delete();
+
+            Tile newTile = game.getMap().getTileXY(attackedPos.getX(), attackedPos.getY());
+            attacker.move(newTile);
+            attacker.setActionInTurnNumber(game.getTurnNumber());
+        }
+
+        if(attacker.getDefence() < 0){
+            attacker.delete();
+        }
     }
 }

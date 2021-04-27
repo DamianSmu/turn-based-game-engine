@@ -13,7 +13,7 @@ public class Game {
     private Map map;
     private final GameLog gameLog;
     private int turnNumber;
-    private final List<UserAction> actions;
+    private List<UserAction> actions;
 
     public Game() {
         this.players = new ArrayList<>();
@@ -43,7 +43,7 @@ public class Game {
         while (!placed) {
             Tile tile = list.get(idx);
             if (tile.getMapObjects().size() == 0) {
-                tile.getMapObjects().add(new Settlers(list.get(idx), player));
+                tile.addMapObject(new Settlers(player));
                 placed = true;
             }
             idx++;
@@ -53,10 +53,12 @@ public class Game {
     public void takeTurn(Player player) {
         for (UserAction action : actions) {
             action.act(player, this);
+
         }
     }
 
     public void nextTurn() {
+        actions = new ArrayList<>();
         turnNumber++;
     }
 

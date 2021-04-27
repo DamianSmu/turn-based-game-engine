@@ -1,5 +1,7 @@
 package model;
 
+import model.utils.PositionXY;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -41,6 +43,7 @@ public class Tile {
 
     public void addMapObject(MapObject mapObject) {
         mapObjects.add(mapObject);
+        mapObject.setTile(this);
     }
 
     public void deleteMapObject(MapObject mapObject) {

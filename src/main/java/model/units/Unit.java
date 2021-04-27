@@ -7,25 +7,36 @@ import model.Tile;
 public class Unit extends MapObject {
     private double defence;
     private double offence;
-    private int actionInTurnNumber;
 
     public Unit(Tile tile, Player player, double defence, double offence) {
         super(tile, player);
         this.defence = defence;
         this.offence = offence;
-        actionInTurnNumber = -1;
     }
 
     public Unit(Tile tile, Player player) {
         super(tile, player);
-        actionInTurnNumber = -1;
     }
 
-    public int actionInTurnNumber() {
-        return actionInTurnNumber;
+    public Unit(Player player, double defence, double offence) {
+        super(player);
+        this.defence = defence;
+        this.offence = offence;
     }
 
-    public void setActionInTurnNumber(int turnNumber) {
-        this.actionInTurnNumber = turnNumber;
+    public double getDefence() {
+        return defence;
+    }
+
+    public void setDefence(double defence) {
+        this.defence = defence;
+    }
+
+    public double getOffence() {
+        return offence;
+    }
+
+    public void setOffence(double offence) {
+        this.offence = offence;
     }
 }

@@ -24,6 +24,10 @@ public class Player {
         return mapObjects;
     }
 
+    public void addMapObject(MapObject mapObject){
+        this.mapObjects.add(mapObject);
+    }
+
     public void setMapObjects(List<MapObject> mapObjects) {
         this.mapObjects = mapObjects;
     }
