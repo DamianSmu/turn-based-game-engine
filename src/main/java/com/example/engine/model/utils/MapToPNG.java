@@ -4,7 +4,6 @@ import com.example.engine.model.Map;
 import com.example.engine.model.mapObject.MapObject;
 import com.example.engine.model.mapObject.Settlement;
 import com.example.engine.model.mapObject.units.Settlers;
-import com.example.engine.model.mapObject.units.Unit;
 import com.example.engine.model.mapObject.units.Warriors;
 import com.example.engine.model.tile.Tile;
 import com.example.engine.model.tile.TileType;

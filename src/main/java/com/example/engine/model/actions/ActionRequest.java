@@ -1,9 +1,6 @@
 package com.example.engine.model.actions;
 
 import com.example.engine.model.utils.PositionXY;
-import org.springframework.data.annotation.Id;
-
-import java.util.UUID;
 
 public class ActionRequest {
     private ActionType actionType;

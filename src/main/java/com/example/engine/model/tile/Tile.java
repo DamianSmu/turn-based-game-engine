@@ -4,14 +4,10 @@ package com.example.engine.model.tile;
 import com.example.engine.model.mapObject.MapObject;
 import com.example.engine.model.utils.PositionXY;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 
 
 public class Tile {
@@ -67,12 +63,12 @@ public class Tile {
         return mapObjects.isEmpty();
     }
 
-    public void removeMapObject(MapObject mapObject){
+    public void removeMapObject(MapObject mapObject) {
         mapObjects.remove(mapObject);
         mapObject.setTile(null);
     }
 
-    public void moveMapObject(MapObject mapObject, Tile tile){
+    public void moveMapObject(MapObject mapObject, Tile tile) {
         mapObjects.remove(mapObject);
         tile.addMapObject(mapObject);
     }

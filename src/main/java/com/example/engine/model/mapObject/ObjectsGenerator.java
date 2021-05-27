@@ -3,10 +3,10 @@ package com.example.engine.model.mapObject;
 import com.example.engine.model.Map;
 import com.example.engine.model.PlayerSession;
 import com.example.engine.model.mapObject.units.Settlers;
-import com.example.engine.model.utils.noise.OpenSimplex2S;
 import com.example.engine.model.tile.Tile;
 import com.example.engine.model.tile.TileType;
 import com.example.engine.model.utils.PositionXY;
+import com.example.engine.model.utils.noise.OpenSimplex2S;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,7 @@ public class ObjectsGenerator {
         int RATE = map.getSize() / 5;
         List<Tile> list = map.getTiles().stream().filter(t -> t.getType() == TileType.LAND).collect(Collectors.toList());
         Random random = new Random(seed);
-        for(int i = 0; i < RATE; i++){
+        for (int i = 0; i < RATE; i++) {
             Tile tile = list.get(random.nextInt(list.size()));
             tile.setType(type);
         }

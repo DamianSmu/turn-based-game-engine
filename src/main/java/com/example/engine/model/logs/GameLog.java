@@ -1,22 +1,15 @@
 package com.example.engine.model.logs;
 
-import org.springframework.data.annotation.Id;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class GameLog implements Serializable {
-    private List<LogEntry> log;
     private static GameLog instance;
+    private final List<LogEntry> log;
 
     public GameLog() {
         this.log = new ArrayList<>();
-    }
-
-    public void addEntry(LogEntry entry) {
-        log.add(entry);
     }
 
     public static GameLog getInstance() {
@@ -24,5 +17,9 @@ public class GameLog implements Serializable {
             instance = new GameLog();
         }
         return instance;
+    }
+
+    public void addEntry(LogEntry entry) {
+        log.add(entry);
     }
 }

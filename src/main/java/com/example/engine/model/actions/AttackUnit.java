@@ -1,12 +1,11 @@
 package com.example.engine.model.actions;
 
+import com.example.engine.model.Game;
+import com.example.engine.model.PlayerSession;
 import com.example.engine.model.logs.GameLog;
 import com.example.engine.model.logs.LogEntry;
 import com.example.engine.model.mapObject.units.Unit;
 import com.example.engine.model.utils.PositionXY;
-import com.example.engine.model.Game;
-import com.example.engine.model.PlayerSession;
-import com.example.engine.model.tile.Tile;
 
 import java.util.Random;
 
@@ -42,13 +41,13 @@ public class AttackUnit implements UserAction {
         attacked.setDefence(attacked.getDefence() - attacker.getOffence() * (rand.nextDouble() + 0.5d));
         attacker.setDefence(attacker.getDefence() - attacked.getOffence() * (rand.nextDouble() + 0.5d));
 
-        if(attacked.getDefence() <= 0){
+        if (attacked.getDefence() <= 0) {
             attacker.getTile().moveMapObject(attacker, attacked.getTile());
             attacked.getTile().deleteMapObject(attacked);
             attacker.setActionInTurnNumber(game.getTurnNumber());
         }
 
-        if(attacker.getDefence() < 0){
+        if (attacker.getDefence() < 0) {
             attacker.getTile().deleteMapObject(attacker);
         }
     }

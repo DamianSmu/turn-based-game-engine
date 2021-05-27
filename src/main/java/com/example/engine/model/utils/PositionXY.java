@@ -1,9 +1,6 @@
 package com.example.engine.model.utils;
 
-import org.springframework.data.annotation.Id;
-
 import java.io.Serializable;
-import java.util.UUID;
 
 public class PositionXY implements Serializable {
 

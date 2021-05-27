@@ -1,7 +1,6 @@
 package com.example.engine.model.mapObject;
 
 import com.example.engine.model.PlayerSession;
-import com.example.engine.model.tile.Tile;
 import com.example.engine.model.tile.TileType;
 import org.springframework.data.annotation.PersistenceConstructor;
 

@@ -1,25 +1,23 @@
 package com.example.engine.model.actions;
 
-import com.example.engine.model.logs.GameLog;
-import com.example.engine.model.logs.LogEntry;
-import com.example.engine.model.utils.PositionXY;
 import com.example.engine.model.Game;
 import com.example.engine.model.PlayerSession;
+import com.example.engine.model.logs.GameLog;
+import com.example.engine.model.logs.LogEntry;
 import com.example.engine.model.mapObject.Settlement;
-import com.example.engine.model.tile.Tile;
 import com.example.engine.model.mapObject.units.Unit;
+import com.example.engine.model.utils.PositionXY;
 
 import java.util.Random;
 
 public class AttackSettlement implements UserAction {
-    private Unit unit;
-    private Settlement settlement;
+    private final Unit unit;
+    private final Settlement settlement;
 
     public AttackSettlement(Unit unit, Settlement settlement) {
         this.unit = unit;
         this.settlement = settlement;
     }
-    
 
     @Override
     public void act(PlayerSession playerSession, Game game) {
@@ -43,8 +41,8 @@ public class AttackSettlement implements UserAction {
         Random rand = new Random();
         settlement.setDefence(settlement.getDefence() - unit.getOffence() * (rand.nextDouble() + 0.5d));
 
-        if(settlement.getDefence() <= 0){
-            unit.getTile().moveMapObject(unit,settlement.getTile());
+        if (settlement.getDefence() <= 0) {
+            unit.getTile().moveMapObject(unit, settlement.getTile());
             settlement.getTile().removeMapObject(settlement);
             unit.setActionInTurnNumber(game.getTurnNumber());
         }

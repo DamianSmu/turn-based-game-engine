@@ -2,7 +2,6 @@ package com.example.engine.model.actions;
 
 import com.example.engine.api.exception.ResponseException;
 import com.example.engine.model.Map;
-import com.example.engine.model.PlayerSession;
 import com.example.engine.model.mapObject.MapObject;
 import com.example.engine.model.mapObject.Settlement;
 import com.example.engine.model.mapObject.units.Settlers;
@@ -11,15 +10,18 @@ import com.example.engine.model.mapObject.units.UnitType;
 import com.example.engine.model.tile.Tile;
 import com.example.engine.model.utils.PositionXY;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 public class ActionResolver {
-    public static UserAction resolve(Map map, ActionType type, PositionXY posFrom, PositionXY posTo) throws CannotResolveActionException{
+    public static UserAction resolve(Map map, ActionType type, PositionXY posFrom, PositionXY posTo) throws CannotResolveActionException {
         int size = map.getSize();
-        if(posFrom.getX() > size || posFrom.getX() < 0) throw new ResponseException("Invalid position in requested action", HttpStatus.BAD_REQUEST);
-        if(posFrom.getY() > size || posFrom.getY() < 0) throw new ResponseException("Invalid position in requested action", HttpStatus.BAD_REQUEST);
-        if(posTo.getX() > size || posTo.getX() < 0) throw new ResponseException("Invalid position in requested action", HttpStatus.BAD_REQUEST);
-        if(posTo.getY() > size || posTo.getY() < 0) throw new ResponseException("Invalid position in requested action", HttpStatus.BAD_REQUEST);
+        if (posFrom.getX() > size || posFrom.getX() < 0)
+            throw new ResponseException("Invalid position in requested action", HttpStatus.BAD_REQUEST);
+        if (posFrom.getY() > size || posFrom.getY() < 0)
+            throw new ResponseException("Invalid position in requested action", HttpStatus.BAD_REQUEST);
+        if (posTo.getX() > size || posTo.getX() < 0)
+            throw new ResponseException("Invalid position in requested action", HttpStatus.BAD_REQUEST);
+        if (posTo.getY() > size || posTo.getY() < 0)
+            throw new ResponseException("Invalid position in requested action", HttpStatus.BAD_REQUEST);
 
         Tile from = map.getTileFromPosition(posFrom);
         Tile to = map.getTileFromPosition(posTo);
@@ -28,7 +30,7 @@ public class ActionResolver {
         Settlement settlement;
         Unit unit1;
         Unit unit2;
-        switch (type){
+        switch (type) {
             case MOVE_UNIT:
                 unit1 = (Unit) getObject(from, Unit.class);
                 userAction = new MoveUnit(unit1, posTo);
@@ -61,11 +63,11 @@ public class ActionResolver {
         return userAction;
     }
 
-    public static UserAction resolve(Map map, ActionRequest actionRequest){
+    public static UserAction resolve(Map map, ActionRequest actionRequest) {
         return resolve(map, actionRequest.getActionType(), actionRequest.getFrom(), actionRequest.getTo());
     }
 
-    private static MapObject getObject(Tile tile, Class<?> ofClass){
+    private static MapObject getObject(Tile tile, Class<?> ofClass) {
         return tile.getMapObjects().stream().filter(ofClass::isInstance).findAny().orElseThrow(
                 CannotResolveActionException::new);
     }

@@ -1,16 +1,10 @@
 package com.example.engine.api.dto.response;
 
 import com.example.engine.model.GameState;
-import com.example.engine.model.Map;
 import com.example.engine.model.PlayerSession;
 import com.example.engine.model.User;
-import com.example.engine.model.actions.UserAction;
-import com.example.engine.model.logs.GameLog;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.data.annotation.Id;
 
 import java.util.List;
-import java.util.UUID;
 
 public class GameStatusResponseDTO {
 

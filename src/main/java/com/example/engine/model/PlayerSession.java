@@ -9,13 +9,12 @@ import java.util.Objects;
 
 
 public class PlayerSession {
-    @Id
-    private String id;
-
     @JsonIgnore
     private static final int INIT_GOLD_AMOUNT = 100;
     @JsonIgnore
     private static final int INIT_IRON_AMOUNT = 100;
+    @Id
+    private String id;
     private int goldAmount;
     private int ironAmount;
 

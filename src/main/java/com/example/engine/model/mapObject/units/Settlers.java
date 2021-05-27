@@ -2,7 +2,6 @@ package com.example.engine.model.mapObject.units;
 
 import com.example.engine.model.PlayerSession;
 import com.example.engine.model.mapObject.GoldApplier;
-import com.example.engine.model.tile.Tile;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 public class Settlers extends Unit implements GoldApplier {
