@@ -1,4 +1,4 @@
-package com.example.engine.model.noise;
+package com.example.engine.model.utils.noise;
 
 /**
  * K.jpg's OpenSimplex 2, smooth variant ("SuperSimplex")

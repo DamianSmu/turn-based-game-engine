@@ -1,7 +1,7 @@
 package com.example.engine.api.repository;
 
-import com.example.engine.model.Map;
+import com.example.engine.model.Game;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface MapRepository extends MongoRepository<Map, String> {
+public interface GameRepository extends MongoRepository<Game, String> {
 }

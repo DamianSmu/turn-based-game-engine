@@ -1,47 +1,31 @@
 package com.example.engine.model;
 
-import com.example.engine.model.mapObject.GoldApplier;
-import com.example.engine.model.mapObject.IronApplier;
-import com.example.engine.model.mapObject.MapObject;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+
+import java.util.Objects;
+
 
 public class PlayerSession {
-    private final int INIT_GOLD_AMOUNT = 100;
-    private final int INIT_IRON_AMOUNT = 100;
+    @Id
+    private String id;
 
-    private List<MapObject> mapObjects;
+    @JsonIgnore
+    private static final int INIT_GOLD_AMOUNT = 100;
+    @JsonIgnore
+    private static final int INIT_IRON_AMOUNT = 100;
     private int goldAmount;
     private int ironAmount;
 
-    private Player player;
-    private Session session;
+    @DBRef
+    private User user;
 
-
-    public PlayerSession() {
-        mapObjects = new ArrayList<>();
+    public PlayerSession(User user) {
+        this.user = user;
         goldAmount = INIT_GOLD_AMOUNT;
         ironAmount = INIT_IRON_AMOUNT;
-    }
-
-    public List<MapObject> getMapObjects() {
-        return mapObjects;
-    }
-
-    public void addMapObject(MapObject mapObject){
-        this.mapObjects.add(mapObject);
-    }
-
-    public void setMapObjects(List<MapObject> mapObjects) {
-        this.mapObjects = mapObjects;
-    }
-
-    public void updateGoldAmount(){
-        goldAmount += mapObjects.stream().filter(x -> x instanceof GoldApplier).mapToInt(x -> ((GoldApplier) x).applyGold()).sum();
-    }
-    public void updateIronAmount(){
-        ironAmount += mapObjects.stream().filter(x -> x instanceof IronApplier).mapToInt(x -> ((IronApplier) x).applyIron()).sum();
     }
 
     public int getGoldAmount() {
@@ -58,5 +42,26 @@ public class PlayerSession {
 
     public void setIronAmount(int ironAmount) {
         this.ironAmount = ironAmount;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PlayerSession session = (PlayerSession) o;
+        return goldAmount == session.goldAmount && ironAmount == session.ironAmount && Objects.equals(id, session.id) && Objects.equals(user, session.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, goldAmount, ironAmount, user);
     }
 }

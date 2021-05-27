@@ -23,7 +23,7 @@ public class AttackSettlement implements UserAction {
 
     @Override
     public void act(PlayerSession playerSession, Game game) {
-        if (!unit.getPlayer().equals(playerSession)) {
+        if (!unit.getPlayerSession().equals(playerSession)) {
             GameLog.getInstance().addEntry(LogEntry.OBJECT_DOES_NOT_BELONG_TO_PLAYER(playerSession, game.getTurnNumber()));
             return;
         }
@@ -44,11 +44,8 @@ public class AttackSettlement implements UserAction {
         settlement.setDefence(settlement.getDefence() - unit.getOffence() * (rand.nextDouble() + 0.5d));
 
         if(settlement.getDefence() <= 0){
-            unit.move(settlement.getTile());
-            settlement.delete();
-
-            Tile newTile = game.getMap().getTileXY(settlementPos.getX(), settlementPos.getY());
-            unit.move(newTile);
+            unit.getTile().moveMapObject(unit,settlement.getTile());
+            settlement.getTile().removeMapObject(settlement);
             unit.setActionInTurnNumber(game.getTurnNumber());
         }
     }

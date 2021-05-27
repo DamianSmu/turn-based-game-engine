@@ -1,0 +1,15 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost/db1
+security:
+  jwt:
+    token:
+      secret-key: secret
+      expire-length: 3600000
+
+server:
+  error:
+    include-message: always
+
+debug: true

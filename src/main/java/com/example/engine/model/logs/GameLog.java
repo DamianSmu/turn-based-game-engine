@@ -1,10 +1,14 @@
 package com.example.engine.model.logs;
 
+import org.springframework.data.annotation.Id;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-public class GameLog {
-    private final List<LogEntry> log;
+public class GameLog implements Serializable {
+    private List<LogEntry> log;
     private static GameLog instance;
 
     public GameLog() {

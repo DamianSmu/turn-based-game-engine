@@ -1,53 +1,56 @@
 package com.example.engine.model.tile;
 
-import com.example.engine.model.Map;
+
 import com.example.engine.model.mapObject.MapObject;
 import com.example.engine.model.utils.PositionXY;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.annotation.PersistenceConstructor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 
 
 public class Tile {
-
-    @DBRef(lazy = true)
-    @JsonIgnore
-    private Map map;
-
     private TileType type;
     private PositionXY position;
-    @DBRef(lazy = true)
-    private Set<MapObject> mapObjects;
 
-    public Tile() {
-    }
+    private List<MapObject> mapObjects = new ArrayList<>();
 
-    public Tile(Map map, TileType type, int x, int y) {
-        this.map = map;
+    public Tile(TileType type, PositionXY position) {
         this.type = type;
-        this.position = new PositionXY(x, y);
-        mapObjects = new HashSet<>();
+        this.position = position;
+
     }
 
-    @JsonIgnore
-    public List<Tile> getNeighbours() {
-        int size = map.getSize();
-        PositionXY pos = this.getPosition();
-        int x = pos.getX();
-        int y = pos.getY();
-        List<Tile> result = new ArrayList<>();
-        if (x > 0) result.add(map.getTileXY(x - 1, y));
-        if (y > 0) result.add(map.getTileXY(x, y - 1));
-        if (x < size) result.add(map.getTileXY(x + 1, y));
-        if (y < size) result.add(map.getTileXY(x, y + 1));
-        if (x > 0 && y < size) result.add(map.getTileXY(x - 1, y + 1));
-        if (x > 0 && y > 0) result.add(map.getTileXY(x - 1, y - 1));
-        if (x < size && y < size) result.add(map.getTileXY(x + 1, y + 1));
-        if (y < size && x > 0) result.add(map.getTileXY(x + 1, y - 1));
-        return result;
+    @PersistenceConstructor
+    public Tile(TileType type, PositionXY position, List<MapObject> mapObjects) {
+        this.type = type;
+        this.position = position;
+        this.mapObjects = mapObjects;
+        mapObjects.forEach(m -> m.setTile(this));
     }
+
+    //    @JsonIgnore
+//    public List<Tile> getNeighbours() {
+//        int size = map.getSize();
+//        PositionXY pos = this.getPosition();
+//        int x = pos.getX();
+//        int y = pos.getY();
+//        List<Tile> result = new ArrayList<>();
+//        if (x > 0) result.add(map.getTileXY(x - 1, y));
+//        if (y > 0) result.add(map.getTileXY(x, y - 1));
+//        if (x < size) result.add(map.getTileXY(x + 1, y));
+//        if (y < size) result.add(map.getTileXY(x, y + 1));
+//        if (x > 0 && y < size) result.add(map.getTileXY(x - 1, y + 1));
+//        if (x > 0 && y > 0) result.add(map.getTileXY(x - 1, y - 1));
+//        if (x < size && y < size) result.add(map.getTileXY(x + 1, y + 1));
+//        if (y < size && x > 0) result.add(map.getTileXY(x + 1, y - 1));
+//        return result;
+//    }
 
     @JsonIgnore
     public boolean isEmpty() {
@@ -60,8 +63,18 @@ public class Tile {
     }
 
     @JsonIgnore
-    public boolean isFreeToPlaceObject(){
+    public boolean isFreeToPlaceObject() {
         return mapObjects.isEmpty();
+    }
+
+    public void removeMapObject(MapObject mapObject){
+        mapObjects.remove(mapObject);
+        mapObject.setTile(null);
+    }
+
+    public void moveMapObject(MapObject mapObject, Tile tile){
+        mapObjects.remove(mapObject);
+        tile.addMapObject(mapObject);
     }
 
     public void deleteMapObject(MapObject mapObject) {
@@ -84,21 +97,12 @@ public class Tile {
         this.position = position;
     }
 
-    public com.example.engine.model.Map getMap() {
-        return map;
-    }
-
-    public void setMap(Map map) {
-        this.map = map;
-    }
-
-    public Set<MapObject> getMapObjects() {
+    public List<MapObject> getMapObjects() {
         return mapObjects;
     }
 
-    public void setMapObjects(Set<MapObject> mapObjects) {
+    public void setMapObjects(List<MapObject> mapObjects) {
         this.mapObjects = mapObjects;
     }
-
 
 }

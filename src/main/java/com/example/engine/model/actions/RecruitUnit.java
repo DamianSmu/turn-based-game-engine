@@ -21,7 +21,7 @@ public class RecruitUnit implements UserAction {
 
     @Override
     public void act(PlayerSession playerSession, Game game) {
-        if (!settlement.getPlayer().equals(playerSession)) {
+        if (!settlement.getPlayerSession().equals(playerSession)) {
             GameLog.getInstance().addEntry(LogEntry.OBJECT_DOES_NOT_BELONG_TO_PLAYER(playerSession, game.getTurnNumber()));
             return;
         }

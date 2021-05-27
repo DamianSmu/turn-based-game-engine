@@ -1,35 +1,46 @@
 package com.example.engine.model.mapObject;
 
+
 import com.example.engine.model.PlayerSession;
 import com.example.engine.model.tile.Tile;
-import org.springframework.data.annotation.Id;
-
-import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
 
 public class MapObject {
-    @Id
-    private String id = UUID.randomUUID().toString();
 
-    private Tile tile;
+    @DBRef
     private PlayerSession playerSession;
+
     private int actionInTurnNumber;
 
-    public MapObject(Tile tile) {
-        this.tile = tile;
-    }
-
-    public MapObject(Tile tile, PlayerSession playerSession) {
-        this.tile = tile;
-        this.playerSession = playerSession;
-        this.actionInTurnNumber = -1;
-        playerSession.addMapObject(this);
-    }
+    @Transient
+    @JsonIgnore
+    private Tile tile;
 
     public MapObject(PlayerSession playerSession) {
         this.playerSession = playerSession;
         this.actionInTurnNumber = -1;
-        playerSession.addMapObject(this);
+    }
+
+    @PersistenceConstructor
+    public MapObject(PlayerSession playerSession, int actionInTurnNumber) {
+        this.playerSession = playerSession;
+        this.actionInTurnNumber = actionInTurnNumber;
+    }
+
+    public PlayerSession getPlayerSession() {
+        return playerSession;
+    }
+
+    public void setPlayerSession(PlayerSession playerSession) {
+        this.playerSession = playerSession;
+    }
+
+    public int actionInTurnNumber() {
+        return actionInTurnNumber;
     }
 
     public Tile getTile() {
@@ -40,38 +51,11 @@ public class MapObject {
         this.tile = tile;
     }
 
-    public void move(Tile tile) {
-        this.tile.deleteMapObject(this);
-        tile.addMapObject(this);
-        this.tile = tile;
-    }
-
-    public PlayerSession getPlayer() {
-        return playerSession;
-    }
-
-    public void setPlayer(PlayerSession playerSession) {
-        this.playerSession = playerSession;
-    }
-
-    public void delete() {
-        playerSession.getMapObjects().remove(this);
-        tile.getMapObjects().remove(this);
-    }
-
-    public int actionInTurnNumber() {
+    public int getActionInTurnNumber() {
         return actionInTurnNumber;
     }
 
     public void setActionInTurnNumber(int turnNumber) {
         this.actionInTurnNumber = turnNumber;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 }

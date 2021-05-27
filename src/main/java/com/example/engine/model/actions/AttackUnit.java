@@ -21,7 +21,7 @@ public class AttackUnit implements UserAction {
 
     @Override
     public void act(PlayerSession playerSession, Game game) {
-        if (!attacker.getPlayer().equals(playerSession)) {
+        if (!attacker.getPlayerSession().equals(playerSession)) {
             GameLog.getInstance().addEntry(LogEntry.OBJECT_DOES_NOT_BELONG_TO_PLAYER(playerSession, game.getTurnNumber()));
             return;
         }
@@ -43,16 +43,13 @@ public class AttackUnit implements UserAction {
         attacker.setDefence(attacker.getDefence() - attacked.getOffence() * (rand.nextDouble() + 0.5d));
 
         if(attacked.getDefence() <= 0){
-            attacker.move(attacked.getTile());
-            attacked.delete();
-
-            Tile newTile = game.getMap().getTileXY(attackedPos.getX(), attackedPos.getY());
-            attacker.move(newTile);
+            attacker.getTile().moveMapObject(attacker, attacked.getTile());
+            attacked.getTile().deleteMapObject(attacked);
             attacker.setActionInTurnNumber(game.getTurnNumber());
         }
 
         if(attacker.getDefence() < 0){
-            attacker.delete();
+            attacker.getTile().deleteMapObject(attacker);
         }
     }
 }

@@ -3,19 +3,23 @@ package com.example.engine.model.mapObject;
 import com.example.engine.model.PlayerSession;
 import com.example.engine.model.tile.Tile;
 import com.example.engine.model.tile.TileType;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 public class Settlement extends MapObject implements GoldApplier, IronApplier {
 
-    private final double INIT_DEFENCE = 20;
-    private final int GOLD_PRODUCTION_WITH_GOLD_DEPOSIT = 50;
-    private final int GOLD_PRODUCTION_WITHOUT_GOLD_DEPOSIT = 5;
-    private final int IRON_PRODUCTION = 50;
+    private static final double INIT_DEFENCE = 20;
+    private static final int GOLD_PRODUCTION_WITH_GOLD_DEPOSIT = 50;
+    private static final int GOLD_PRODUCTION_WITHOUT_GOLD_DEPOSIT = 5;
+    private static final int IRON_PRODUCTION = 50;
 
     private String name;
     private double defence;
 
-    public Settlement(Tile tile, PlayerSession playerSession) {
-        super(tile, playerSession);
+    @PersistenceConstructor
+    public Settlement(PlayerSession playerSession, int actionInTurnNumber, String name, double defence) {
+        super(playerSession, actionInTurnNumber);
+        this.name = name;
+        this.defence = defence;
     }
 
     public Settlement(PlayerSession playerSession) {

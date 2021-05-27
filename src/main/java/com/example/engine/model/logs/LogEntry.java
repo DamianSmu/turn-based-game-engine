@@ -13,7 +13,6 @@ public class LogEntry {
         this.message = message;
     }
 
-
     public static LogEntry INVALID_ACTION(PlayerSession playerSession, int turnNumber) {
         return new LogEntry(playerSession, turnNumber, "Invalid action.");
     }
@@ -24,5 +23,9 @@ public class LogEntry {
 
     public static LogEntry UNIT_HAS_TAKEN_ACTION_IN_CURRENT_TURN(PlayerSession playerSession, int turnNumber) {
         return new LogEntry(playerSession, turnNumber, "Unit has taken action in current turn.");
+    }
+
+    public static LogEntry CANNOT_REGISTER_PLAYER(String name) {
+        return new LogEntry(null, 0, "Cannot register player: " + name);
     }
 }

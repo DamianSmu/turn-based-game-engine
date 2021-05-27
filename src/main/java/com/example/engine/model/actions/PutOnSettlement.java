@@ -19,7 +19,7 @@ public class PutOnSettlement implements UserAction {
 
     @Override
     public void act(PlayerSession playerSession, Game game) {
-        if (!settlers.getPlayer().equals(playerSession)) {
+        if (!settlers.getPlayerSession().equals(playerSession)) {
             GameLog.getInstance().addEntry(LogEntry.OBJECT_DOES_NOT_BELONG_TO_PLAYER(playerSession, game.getTurnNumber()));
             return;
         }
@@ -35,8 +35,7 @@ public class PutOnSettlement implements UserAction {
         Tile tile = settlers.getTile();
         if (tile.getMapObjects().size() == 1) {
             tile.addMapObject(new Settlement(playerSession));
-            settlers.delete();
-            settlers.setActionInTurnNumber(game.getTurnNumber());
+            tile.removeMapObject(settlers);
         } else {
             GameLog.getInstance().addEntry(new LogEntry(playerSession, game.getTurnNumber(), "Cannot put on non empty tile."));
         }

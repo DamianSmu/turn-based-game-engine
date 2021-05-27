@@ -3,21 +3,18 @@ package com.example.engine.model.mapObject.units;
 import com.example.engine.model.mapObject.MapObject;
 import com.example.engine.model.PlayerSession;
 import com.example.engine.model.tile.Tile;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 public class Unit extends MapObject {
     private double defence;
     private double offence;
     private final UnitType unitType;
 
-    public Unit(Tile tile, PlayerSession playerSession, double defence, double offence, UnitType unitType) {
-        super(tile, playerSession);
+    @PersistenceConstructor
+    public Unit(PlayerSession playerSession, int actionInTurnNumber, double defence, double offence, UnitType unitType) {
+        super(playerSession, actionInTurnNumber);
         this.defence = defence;
         this.offence = offence;
-        this.unitType = unitType;
-    }
-
-    public Unit(Tile tile, PlayerSession playerSession, UnitType unitType) {
-        super(tile, playerSession);
         this.unitType = unitType;
     }
 

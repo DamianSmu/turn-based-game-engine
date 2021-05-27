@@ -1,12 +1,12 @@
 package com.example.engine.model.actions;
 
-import com.example.engine.model.logs.GameLog;
-import com.example.engine.model.logs.LogEntry;
-import com.example.engine.model.utils.PositionXY;
 import com.example.engine.model.Game;
 import com.example.engine.model.PlayerSession;
-import com.example.engine.model.tile.Tile;
+import com.example.engine.model.logs.GameLog;
+import com.example.engine.model.logs.LogEntry;
 import com.example.engine.model.mapObject.units.Unit;
+import com.example.engine.model.tile.Tile;
+import com.example.engine.model.utils.PositionXY;
 
 public class MoveUnit implements UserAction {
     private final Unit unit;
@@ -19,9 +19,15 @@ public class MoveUnit implements UserAction {
         this.newY = newY;
     }
 
+    public MoveUnit(Unit unit, PositionXY positionXY) {
+        this.unit = unit;
+        this.newX = positionXY.getX();
+        this.newY = positionXY.getY();
+    }
+
     @Override
     public void act(PlayerSession playerSession, Game game) {
-        if (!unit.getPlayer().equals(playerSession)) {
+        if (!unit.getPlayerSession().equals(playerSession)) {
             GameLog.getInstance().addEntry(LogEntry.OBJECT_DOES_NOT_BELONG_TO_PLAYER(playerSession, game.getTurnNumber()));
             return;
         }
@@ -38,8 +44,8 @@ public class MoveUnit implements UserAction {
         }
 
         Tile newTile = game.getMap().getTileXY(newX, newY);
-        if(newTile.isFreeToPlaceObject()) {
-            unit.move(newTile);
+        if (newTile.isFreeToPlaceObject()) {
+            unit.getTile().moveMapObject(unit, newTile);
             unit.setActionInTurnNumber(game.getTurnNumber());
         } else {
             GameLog.getInstance().addEntry(new LogEntry(playerSession, game.getTurnNumber(), "Cannot put on non empty tile."));
