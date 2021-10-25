@@ -1,5 +1,7 @@
 package com.example.engine.model.logs;
 
+import org.springframework.data.annotation.PersistenceConstructor;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +9,11 @@ import java.util.List;
 public class GameLog implements Serializable {
     private static GameLog instance;
     private final List<LogEntry> log;
+
+    @PersistenceConstructor
+    public GameLog(List<LogEntry> log) {
+        this.log = log;
+    }
 
     public GameLog() {
         this.log = new ArrayList<>();
