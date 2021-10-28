@@ -14,7 +14,7 @@ public class Tile {
     private TileType type;
     private PositionXY position;
 
-    private List<MapObject> mapObjects = new ArrayList<>();
+    private MapObject mapObject;
 
     public Tile(TileType type, PositionXY position) {
         this.type = type;
@@ -23,11 +23,13 @@ public class Tile {
     }
 
     @PersistenceConstructor
-    public Tile(TileType type, PositionXY position, List<MapObject> mapObjects) {
+    public Tile(TileType type, PositionXY position, MapObject mapObject) {
         this.type = type;
         this.position = position;
-        this.mapObjects = mapObjects;
-        mapObjects.forEach(m -> m.setTile(this));
+        this.mapObject = mapObject;
+        if(mapObject != null){
+            mapObject.setTile(this);
+        }
     }
 
     //    @JsonIgnore
@@ -50,31 +52,31 @@ public class Tile {
 
     @JsonIgnore
     public boolean isEmpty() {
-        return mapObjects.isEmpty();
+        return mapObject == null;
     }
 
-    public void addMapObject(MapObject mapObject) {
-        mapObjects.add(mapObject);
+    public void setMapObject(MapObject mapObject) {
+        this.mapObject = mapObject;
         mapObject.setTile(this);
     }
 
     @JsonIgnore
     public boolean isFreeToPlaceObject() {
-        return mapObjects.isEmpty();
+        return mapObject == null;
     }
 
     public void removeMapObject(MapObject mapObject) {
-        mapObjects.remove(mapObject);
+        this.mapObject = null;
         mapObject.setTile(null);
     }
 
     public void moveMapObject(MapObject mapObject, Tile tile) {
-        mapObjects.remove(mapObject);
-        tile.addMapObject(mapObject);
+        removeMapObject(mapObject);
+        tile.setMapObject(mapObject);
     }
 
     public void deleteMapObject(MapObject mapObject) {
-        mapObjects.remove(mapObject);
+        this.mapObject = null;
     }
 
     public TileType getType() {
@@ -93,12 +95,8 @@ public class Tile {
         this.position = position;
     }
 
-    public List<MapObject> getMapObjects() {
-        return mapObjects;
-    }
-
-    public void setMapObjects(List<MapObject> mapObjects) {
-        this.mapObjects = mapObjects;
+    public MapObject getMapObject() {
+        return mapObject;
     }
 
 }

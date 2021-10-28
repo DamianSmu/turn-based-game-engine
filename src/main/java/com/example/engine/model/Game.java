@@ -9,6 +9,7 @@ import com.example.engine.model.logs.LogEntry;
 import com.example.engine.model.mapObject.GoldApplier;
 import com.example.engine.model.mapObject.IronApplier;
 import com.example.engine.model.mapObject.ObjectsGenerator;
+import com.example.engine.model.tile.Tile;
 import com.example.engine.model.tile.TileType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
@@ -120,13 +121,13 @@ public class Game {
 
     public void updateGoldAmount(PlayerSession playerSession) {
         int goldAmount = playerSession.getGoldAmount();
-        goldAmount += map.getTiles().stream().flatMap(x -> x.getMapObjects().stream()).filter(x -> x instanceof GoldApplier && x.getPlayerSession().equals(playerSession)).mapToInt(x -> ((GoldApplier) x).applyGold()).sum();
+        goldAmount += map.getTiles().stream().map(Tile::getMapObject).filter(x -> x instanceof GoldApplier && x.getPlayerSession().equals(playerSession)).mapToInt(x -> ((GoldApplier) x).applyGold()).sum();
         playerSession.setGoldAmount(goldAmount);
     }
 
     public void updateIronAmount(PlayerSession playerSession) {
         int ironAmount = playerSession.getGoldAmount();
-        ironAmount += map.getTiles().stream().flatMap(x -> x.getMapObjects().stream()).filter(x -> x instanceof IronApplier && x.getPlayerSession().equals(playerSession)).mapToInt(x -> ((IronApplier) x).applyIron()).sum();
+        ironAmount += map.getTiles().stream().map(Tile::getMapObject).filter(x -> x instanceof IronApplier && x.getPlayerSession().equals(playerSession)).mapToInt(x -> ((IronApplier) x).applyIron()).sum();
         playerSession.setGoldAmount(ironAmount);
     }
 

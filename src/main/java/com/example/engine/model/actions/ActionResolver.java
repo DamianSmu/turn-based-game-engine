@@ -68,7 +68,9 @@ public class ActionResolver {
     }
 
     private static MapObject getObject(Tile tile, Class<?> ofClass) {
-        return tile.getMapObjects().stream().filter(ofClass::isInstance).findAny().orElseThrow(
-                CannotResolveActionException::new);
+        if(tile.isEmpty()){
+            throw new CannotResolveActionException();
+        }
+        return tile.getMapObject();
     }
 }

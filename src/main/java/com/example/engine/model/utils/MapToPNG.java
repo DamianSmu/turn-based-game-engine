@@ -25,8 +25,10 @@ public class MapToPNG {
     private static Image IRON_TEX;
     private static Image WARRIORS_TEX;
 
-    static {
-        try {
+    static
+    {
+        try
+        {
             SETTLERS_TEX = ImageIO.read(new File("flag.png"));
             SETTLEMENT_TEX = ImageIO.read(new File("castle.png"));
             WATER_TEX = ImageIO.read(new File("water_tex.png"));
@@ -34,7 +36,8 @@ public class MapToPNG {
             GOLD_TEX = ImageIO.read(new File("gold_tex.png"));
             IRON_TEX = ImageIO.read(new File("iron_tex.png"));
             WARRIORS_TEX = ImageIO.read(new File("tent.png"));
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
     }
@@ -62,28 +65,33 @@ public class MapToPNG {
         g.setColor(Color.BLACK);
         g.setFont(newFont);
 
-        for (Tile t : tiles) {
+        for (Tile t : tiles)
+        {
             int x = t.getPosition().getX();
             int y = t.getPosition().getY();
             drawTile(g, x, y, TEX_SIZE, t.getType());
-            for (MapObject o : t.getMapObjects()) {
-                if (o instanceof Settlers) {
-                    g.drawImage(SETTLERS_TEX, x * TEX_SIZE, y * TEX_SIZE, null);
-                    g.drawString(o.getPlayerSession().getUser().getUsername(), x * TEX_SIZE, y * TEX_SIZE);
-                } else if (o instanceof Warriors) {
-                    g.drawImage(WARRIORS_TEX, x * TEX_SIZE, y * TEX_SIZE, null);
-                    g.drawString(o.getPlayerSession().getUser().getUsername(), x * TEX_SIZE, y * TEX_SIZE);
-                } else if (o instanceof Settlement) {
-                    g.drawImage(SETTLEMENT_TEX, x * TEX_SIZE, y * TEX_SIZE, null);
-                    g.drawString(o.getPlayerSession().getUser().getUsername(), x * TEX_SIZE, y * TEX_SIZE);
-                }
+            MapObject o = t.getMapObject();
+            if (o instanceof Settlers)
+            {
+                g.drawImage(SETTLERS_TEX, x * TEX_SIZE, y * TEX_SIZE, null);
+                g.drawString(o.getPlayerSession().getUser().getUsername(), x * TEX_SIZE, y * TEX_SIZE);
+            } else if (o instanceof Warriors)
+            {
+                g.drawImage(WARRIORS_TEX, x * TEX_SIZE, y * TEX_SIZE, null);
+                g.drawString(o.getPlayerSession().getUser().getUsername(), x * TEX_SIZE, y * TEX_SIZE);
+            } else if (o instanceof Settlement)
+            {
+                g.drawImage(SETTLEMENT_TEX, x * TEX_SIZE, y * TEX_SIZE, null);
+                g.drawString(o.getPlayerSession().getUser().getUsername(), x * TEX_SIZE, y * TEX_SIZE);
             }
         }
+
         return image;
     }
 
     private static void drawTile(Graphics2D graphics, int x, int y, int texSize, TileType type) {
-        switch (type) {
+        switch (type)
+        {
             case LAND:
                 graphics.drawImage(LAND_TEX, x * texSize, y * texSize, null);
                 break;

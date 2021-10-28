@@ -44,7 +44,9 @@ public class RecruitUnit implements UserAction {
                 return;
         }
 
-        settlement.getTile().addMapObject(unit);
+
+        //TODO place unit method
+
         settlement.setActionInTurnNumber(game.getTurnNumber());
         unit.setActionInTurnNumber(game.getTurnNumber());
     }

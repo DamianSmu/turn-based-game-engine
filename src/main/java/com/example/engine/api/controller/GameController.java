@@ -115,7 +115,7 @@ public class GameController {
     @GetMapping("/{id}/mapObjects")
     public ResponseEntity<?> getMapObjects(@PathVariable String id) {
         Game game = gameRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Game id not found"));
-        return ResponseEntity.ok(game.getMap().getTiles().stream().filter(t -> t.getMapObjects().size() > 0).collect(Collectors.toList()));
+        return ResponseEntity.ok(game.getMap().getTiles().stream().filter(t -> !t.isEmpty()).collect(Collectors.toList()));
     }
 
     @PostMapping("/{id}/takeTurn")

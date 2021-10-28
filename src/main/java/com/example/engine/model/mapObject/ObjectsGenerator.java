@@ -42,8 +42,8 @@ public class ObjectsGenerator {
         boolean placed = false;
         while (!placed) {
             Tile tile = list.get(random.nextInt(list.size()));
-            if (tile.getMapObjects().size() == 0) {
-                tile.addMapObject(mapObject);
+            if (tile.isEmpty()) {
+                tile.setMapObject(mapObject);
                 mapObject.setTile(tile);
                 placed = true;
             }
