@@ -2,6 +2,7 @@ package com.example.engine.api.controller;
 
 import com.example.engine.api.dto.request.UserLoginRequestDTO;
 import com.example.engine.api.dto.request.UserRequestDTO;
+import com.example.engine.api.dto.response.TokenResponseDTO;
 import com.example.engine.api.security.Role;
 import com.example.engine.api.service.UserService;
 import com.example.engine.model.User;
@@ -28,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String signup(@RequestBody UserRequestDTO user) {
+    public TokenResponseDTO signup(@RequestBody UserRequestDTO user) {
         return userService.signup(new User(
                 user.getUsername(),
                 user.getEmail(),

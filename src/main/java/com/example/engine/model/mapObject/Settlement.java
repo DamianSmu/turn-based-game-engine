@@ -9,7 +9,7 @@ public class Settlement extends MapObject implements GoldApplier, IronApplier {
     private static final double INIT_DEFENCE = 20;
     private static final int GOLD_PRODUCTION_WITH_GOLD_DEPOSIT = 50;
     private static final int GOLD_PRODUCTION_WITHOUT_GOLD_DEPOSIT = 5;
-    private static final int IRON_PRODUCTION = 50;
+    private static final int IRON_PRODUCTION_WITH_IRON_DEPOSIT = 50;
 
     private String name;
     private double defence;
@@ -41,6 +41,6 @@ public class Settlement extends MapObject implements GoldApplier, IronApplier {
 
     @Override
     public int applyIron() {
-        return super.getTile().getType() == TileType.IRON ? IRON_PRODUCTION : 0;
+        return super.getTile().getType() == TileType.IRON ? IRON_PRODUCTION_WITH_IRON_DEPOSIT : 0;
     }
 }

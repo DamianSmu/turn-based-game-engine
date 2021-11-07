@@ -1,5 +1,6 @@
 package com.example.engine.api.service;
 
+import com.example.engine.api.dto.response.TokenResponseDTO;
 import com.example.engine.api.exception.ResponseException;
 import com.example.engine.api.repository.UserRepository;
 import com.example.engine.api.security.JwtTokenProvider;
@@ -41,13 +42,17 @@ public class UserService {
         }
     }
 
-    public String signup(User user) {
+    public TokenResponseDTO signup(User user) {
         if (!userRepository.existsByUsername(user.getUsername())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
-            return jwtTokenProvider.createToken(user.getUsername(), Collections.singletonList(user.getRole()));
+            String token = jwtTokenProvider.createToken(user.getUsername(), Collections.singletonList(user.getRole()));
+            String id = user.getId();
+            return new TokenResponseDTO(token, id);
         } else {
-            throw new ResponseException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
+            String id = userRepository.findByUsername(user.getUsername()).get().getId();
+            String token = signin(user.getUsername(), user.getPassword());
+            return new TokenResponseDTO(token, id);
         }
     }
 

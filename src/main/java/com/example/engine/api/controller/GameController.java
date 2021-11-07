@@ -6,6 +6,7 @@ import com.example.engine.api.repository.GameRepository;
 import com.example.engine.api.repository.PlayerSessionRepository;
 import com.example.engine.api.service.UserService;
 import com.example.engine.model.Game;
+import com.example.engine.model.PlayerSession;
 import com.example.engine.model.User;
 import com.example.engine.model.actions.ActionRequest;
 import org.springframework.http.HttpStatus;
@@ -63,7 +64,9 @@ public class GameController {
     public ResponseEntity<?> connectToGame(Authentication authentication, @PathVariable String id) {
         User user = userService.getUser(authentication);
         Game game = gameRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Game id not found"));
-        return ResponseEntity.ok(game.registerPlayer(user));
+        PlayerSession session = playerSessionRepository.save(game.registerPlayer(user));
+        gameRepository.save(game);
+        return ResponseEntity.ok(session);
     }
 
     @PostMapping("/{id}/start")
