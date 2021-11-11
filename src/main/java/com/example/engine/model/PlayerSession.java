@@ -23,8 +23,8 @@ public class PlayerSession {
 
     public PlayerSession(User user) {
         this.user = user;
-        goldAmount = INIT_GOLD_AMOUNT;
-        ironAmount = INIT_IRON_AMOUNT;
+        this.goldAmount = INIT_GOLD_AMOUNT;
+        this.ironAmount = INIT_IRON_AMOUNT;
     }
 
     public int getGoldAmount() {

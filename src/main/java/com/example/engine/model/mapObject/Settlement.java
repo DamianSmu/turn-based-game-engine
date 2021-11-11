@@ -6,32 +6,19 @@ import org.springframework.data.annotation.PersistenceConstructor;
 
 public class Settlement extends MapObject implements GoldApplier, IronApplier {
 
-    private static final double INIT_DEFENCE = 20;
+    private static final double INIT_DEFENCE = 200;
     private static final int GOLD_PRODUCTION_WITH_GOLD_DEPOSIT = 50;
     private static final int GOLD_PRODUCTION_WITHOUT_GOLD_DEPOSIT = 5;
     private static final int IRON_PRODUCTION_WITH_IRON_DEPOSIT = 50;
 
-    private String name;
-    private double defence;
-
     @PersistenceConstructor
-    public Settlement(PlayerSession playerSession, int actionInTurnNumber, String name, double defence) {
-        super(playerSession, actionInTurnNumber);
-        this.name = name;
-        this.defence = defence;
+    public Settlement(String id, PlayerSession playerSession, int actionInTurnNumber, double defence, double offence) {
+        super(id, playerSession, actionInTurnNumber, defence, offence);
+
     }
 
     public Settlement(PlayerSession playerSession) {
-        super(playerSession);
-        this.defence = INIT_DEFENCE;
-    }
-
-    public double getDefence() {
-        return defence;
-    }
-
-    public void setDefence(double defence) {
-        this.defence = defence;
+        super(playerSession, INIT_DEFENCE, INIT_DEFENCE);
     }
 
     @Override
@@ -42,5 +29,9 @@ public class Settlement extends MapObject implements GoldApplier, IronApplier {
     @Override
     public int applyIron() {
         return super.getTile().getType() == TileType.IRON ? IRON_PRODUCTION_WITH_IRON_DEPOSIT : 0;
+    }
+
+    public String getUnitType() {
+        return "SETTLEMENT";
     }
 }

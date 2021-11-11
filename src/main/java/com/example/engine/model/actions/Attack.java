@@ -1,22 +1,24 @@
 package com.example.engine.model.actions;
 
+
 import com.example.engine.model.Game;
 import com.example.engine.model.PlayerSession;
 import com.example.engine.model.logs.GameLog;
 import com.example.engine.model.logs.LogEntry;
+import com.example.engine.model.mapObject.MapObject;
 import com.example.engine.model.mapObject.Settlement;
 import com.example.engine.model.mapObject.units.Unit;
 import com.example.engine.model.utils.PositionXY;
 
 import java.util.Random;
 
-public class AttackSettlement implements UserAction {
+public class Attack implements UserAction {
     private final Unit unit;
-    private final Settlement settlement;
+    private final MapObject mapObject;
 
-    public AttackSettlement(Unit unit, Settlement settlement) {
+    public Attack (Unit unit, MapObject mapObject) {
         this.unit = unit;
-        this.settlement = settlement;
+        this.mapObject = mapObject;
     }
 
     @Override
@@ -31,7 +33,7 @@ public class AttackSettlement implements UserAction {
             return;
         }
 
-        PositionXY settlementPos = settlement.getTile().getPosition();
+        PositionXY settlementPos = mapObject.getTile().getPosition();
         PositionXY pos = unit.getTile().getPosition();
         if (Math.abs(pos.getX() - settlementPos.getX()) > 1 || Math.abs(pos.getY() - settlementPos.getY()) > 1) {
             GameLog.getInstance().addEntry(new LogEntry(playerSession, game.getTurnNumber(), "Cannot attack, too far."));
@@ -39,12 +41,17 @@ public class AttackSettlement implements UserAction {
         }
 
         Random rand = new Random();
-        settlement.setDefence(settlement.getDefence() - unit.getOffence() * (rand.nextDouble() + 0.5d));
+        mapObject.setDefence(mapObject.getDefence() - unit.getOffence() * (rand.nextDouble() + 0.5d));
+        unit.setDefence(unit.getDefence() - mapObject.getOffence() * (rand.nextDouble() + 0.5d));
 
-        if (settlement.getDefence() <= 0) {
-            unit.getTile().moveMapObject(unit, settlement.getTile());
-            settlement.getTile().removeMapObject(settlement);
+        if (mapObject.getDefence() <= 0) {
+            unit.getTile().moveMapObject(unit, mapObject.getTile());
+            mapObject.getTile().deleteMapObject(mapObject);
             unit.setActionInTurnNumber(game.getTurnNumber());
+        }
+
+        if (unit.getDefence() <= 0) {
+            unit.getTile().deleteMapObject(unit);
         }
     }
 }

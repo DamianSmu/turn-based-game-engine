@@ -33,7 +33,7 @@ public class Game {
     @DBRef
     private List<PlayerSession> playerSessions;
 
-    private Map map;
+    private GameMap gameMap;
 
     private int turnNumber;
 
@@ -50,11 +50,11 @@ public class Game {
     private PlayerSession currentTurnPlayerSession;
 
     @PersistenceConstructor
-    public Game(String id, GameLog gameLog, List<PlayerSession> playerSessions, Map map, int turnNumber, List<ActionRequest> actionRequests, long seed, User founder, GameState state, PlayerSession currentTurnPlayerSession) {
+    public Game(String id, GameLog gameLog, List<PlayerSession> playerSessions, GameMap gameMap, int turnNumber, List<ActionRequest> actionRequests, long seed, User founder, GameState state, PlayerSession currentTurnPlayerSession) {
         this.id = id;
         this.gameLog = gameLog;
         this.playerSessions = playerSessions;
-        this.map = map;
+        this.gameMap = gameMap;
         this.turnNumber = turnNumber;
         this.actionRequests = actionRequests;
         this.seed = seed;
@@ -64,7 +64,7 @@ public class Game {
     }
 
     public Game(long seed, User founder) {
-        state = GameState.CREATED;
+        this.state = GameState.CREATED;
         this.founder = founder;
         this.playerSessions = new ArrayList<>();
         this.turnNumber = 0;
@@ -75,13 +75,13 @@ public class Game {
 
     public void start() {
         state = GameState.STARTED;
-        map = new Map(40, seed);
-        map.createTiles();
-        ObjectsGenerator.placeResources(map, seed, TileType.GOLD);
-        ObjectsGenerator.placeResources(map, seed, TileType.IRON);
+        gameMap = new GameMap(10, seed);
+        gameMap.createTiles();
+        ObjectsGenerator.placeResources(gameMap, seed, TileType.GOLD);
+        ObjectsGenerator.placeResources(gameMap, seed, TileType.IRON);
 
         for (PlayerSession p : playerSessions) {
-            ObjectsGenerator.createInitialSettlersUnit(map, p, seed);
+            ObjectsGenerator.createInitialSettlersUnit(gameMap, p, seed);
         }
 
         currentTurnPlayerSession = playerSessions.get(0);
@@ -100,7 +100,7 @@ public class Game {
     public PlayerSession takeTurn() {
         for (ActionRequest actionRequest : actionRequests) {
             try {
-                UserAction action = ActionResolver.resolve(map, actionRequest);
+                UserAction action = ActionResolver.resolve(gameMap, actionRequest);
                 action.act(currentTurnPlayerSession, this);
             } catch (CannotResolveActionException ex) {
                 GameLog.getInstance().addEntry(new LogEntry(currentTurnPlayerSession, turnNumber, "Cannot resolve action"));
@@ -109,28 +109,38 @@ public class Game {
         updateGoldAmount(currentTurnPlayerSession);
         updateIronAmount(currentTurnPlayerSession);
 
-
         actionRequests = new ArrayList<>();
         turnNumber++;
 
         int idx = playerSessions.indexOf(currentTurnPlayerSession);
         PlayerSession sessionToReturn = currentTurnPlayerSession;
         currentTurnPlayerSession = playerSessions.get(idx == playerSessions.size() - 1 ? 0 : ++idx);
+
+        GameLog.getInstance().printForTurn(turnNumber - 1);
         return sessionToReturn;
     }
 
     public void updateGoldAmount(PlayerSession playerSession) {
         int goldAmount = playerSession.getGoldAmount();
-        goldAmount += map.getTiles().stream().map(Tile::getMapObject).filter(x -> x instanceof GoldApplier && x.getPlayerSession().equals(playerSession)).mapToInt(x -> ((GoldApplier) x).applyGold()).sum();
+        goldAmount += gameMap.getTiles()
+                .stream()
+                .map(Tile::getMapObject)
+                .filter(x -> x instanceof GoldApplier && x.getPlayerSession().equals(playerSession))
+                .mapToInt(x -> ((GoldApplier) x).applyGold())
+                .sum();
         playerSession.setGoldAmount(goldAmount);
     }
 
     public void updateIronAmount(PlayerSession playerSession) {
         int ironAmount = playerSession.getGoldAmount();
-        ironAmount += map.getTiles().stream().map(Tile::getMapObject).filter(x -> x instanceof IronApplier && x.getPlayerSession().equals(playerSession)).mapToInt(x -> ((IronApplier) x).applyIron()).sum();
+        ironAmount += gameMap.getTiles()
+                .stream().
+                map(Tile::getMapObject).
+                filter(x -> x instanceof IronApplier && x.getPlayerSession().equals(playerSession))
+                .mapToInt(x -> ((IronApplier) x).applyIron()).
+                sum();
         playerSession.setGoldAmount(ironAmount);
     }
-
 
     //Getters, setters
 
@@ -146,12 +156,12 @@ public class Game {
         this.playerSessions = playerSessions;
     }
 
-    public com.example.engine.model.Map getMap() {
-        return map;
+    public GameMap getMap() {
+        return gameMap;
     }
 
-    public void setMap(Map map) {
-        this.map = map;
+    public void setMap(GameMap gameMap) {
+        this.gameMap = gameMap;
     }
 
     public int getTurnNumber() {

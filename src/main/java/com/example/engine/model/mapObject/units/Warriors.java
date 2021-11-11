@@ -14,8 +14,8 @@ public class Warriors extends Unit implements GoldApplier {
     }
 
     @PersistenceConstructor
-    public Warriors(PlayerSession playerSession, int actionInTurnNumber, double defence, double offence, UnitType unitType) {
-        super(playerSession, actionInTurnNumber, defence, offence, unitType);
+    public Warriors(String id, PlayerSession playerSession, int actionInTurnNumber, double defence, double offence, UnitType unitType) {
+        super(id, playerSession, actionInTurnNumber, defence, offence, unitType);
     }
 
     @Override

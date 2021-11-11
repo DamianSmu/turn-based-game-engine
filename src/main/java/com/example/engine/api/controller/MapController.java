@@ -3,7 +3,7 @@ package com.example.engine.api.controller;
 import com.example.engine.api.repository.GameRepository;
 import com.example.engine.model.Game;
 import com.example.engine.model.GameState;
-import com.example.engine.model.Map;
+import com.example.engine.model.GameMap;
 import com.example.engine.model.utils.MapToPNG;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,9 +31,9 @@ public class MapController {
         if (game.getState() != GameState.STARTED) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid state of the game (state != STARTED)");
         }
-        Map map = game.getMap();
+        GameMap gameMap = game.getMap();
         response.setContentType("image/png");
-        response.getOutputStream().write(MapToPNG.getBytes(map));
+        response.getOutputStream().write(MapToPNG.getBytes(gameMap));
         response.getOutputStream().close();
     }
 

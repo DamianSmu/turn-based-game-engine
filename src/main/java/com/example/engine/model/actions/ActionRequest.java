@@ -5,14 +5,11 @@ import com.example.engine.model.utils.PositionXY;
 public class ActionRequest {
     private ActionType actionType;
     private PositionXY from;
-    private PositionXY to;
 
-    public ActionRequest(ActionType actionType, PositionXY from, PositionXY to) {
+    public ActionRequest(ActionType actionType, PositionXY from) {
         this.actionType = actionType;
         this.from = from;
-        this.to = to;
     }
-
 
     public ActionType getActionType() {
         return actionType;
@@ -30,11 +27,4 @@ public class ActionRequest {
         this.from = from;
     }
 
-    public PositionXY getTo() {
-        return to;
-    }
-
-    public void setTo(PositionXY to) {
-        this.to = to;
-    }
 }

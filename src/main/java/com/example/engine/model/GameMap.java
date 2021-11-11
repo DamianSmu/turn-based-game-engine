@@ -9,7 +9,7 @@ import org.springframework.data.annotation.PersistenceConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Map {
+public class GameMap {
 
     private List<Tile> tiles = new ArrayList<>();
 
@@ -17,14 +17,14 @@ public class Map {
 
     private long seed;
 
-    public Map(int size, long seed) {
+    public GameMap(int size, long seed) {
         this.size = size;
         this.seed = seed;
     }
 
 
     @PersistenceConstructor
-    public Map(List<Tile> tiles, int size, long seed) {
+    public GameMap(List<Tile> tiles, int size, long seed) {
         this.tiles = tiles;
         this.size = size;
         this.seed = seed;

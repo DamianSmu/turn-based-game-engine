@@ -1,6 +1,6 @@
 package com.example.engine.model.utils;
 
-import com.example.engine.model.Map;
+import com.example.engine.model.GameMap;
 import com.example.engine.model.mapObject.MapObject;
 import com.example.engine.model.mapObject.Settlement;
 import com.example.engine.model.mapObject.units.Settlers;
@@ -42,22 +42,22 @@ public class MapToPNG {
         }
     }
 
-    public static void saveToFile(Map map, int turnNumber) throws IOException {
-        BufferedImage image = getImage(map);
+    public static void saveToFile(GameMap gameMap, int turnNumber) throws IOException {
+        BufferedImage image = getImage(gameMap);
         ImageIO.write(image, "png", new File("map" + turnNumber + ".png"));
     }
 
-    public static byte[] getBytes(Map map) throws IOException {
-        BufferedImage image = getImage(map);
+    public static byte[] getBytes(GameMap gameMap) throws IOException {
+        BufferedImage image = getImage(gameMap);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(image, "png", baos);
         return baos.toByteArray();
     }
 
-    private static BufferedImage getImage(Map map) {
-        int size = map.getSize();
+    private static BufferedImage getImage(GameMap gameMap) {
+        int size = gameMap.getSize();
         final int TEX_SIZE = 64;
-        List<Tile> tiles = map.getTiles();
+        List<Tile> tiles = gameMap.getTiles();
         BufferedImage image = new BufferedImage(size * TEX_SIZE, size * TEX_SIZE, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = (Graphics2D) image.getGraphics();
         Font currentFont = g.getFont();

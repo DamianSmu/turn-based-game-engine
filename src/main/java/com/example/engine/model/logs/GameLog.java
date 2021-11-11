@@ -29,4 +29,8 @@ public class GameLog implements Serializable {
     public void addEntry(LogEntry entry) {
         log.add(entry);
     }
+
+    public void printForTurn(int turn) {
+        log.stream().filter(entry -> entry.getTurnNumber() == turn).forEach(System.out::println);
+    }
 }

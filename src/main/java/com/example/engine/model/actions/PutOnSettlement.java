@@ -35,7 +35,8 @@ public class PutOnSettlement implements UserAction {
         Tile tile = settlers.getTile();
         if (tile.equals(settlers.getTile())) {
             tile.setMapObject(new Settlement(playerSession));
-            tile.removeMapObject(settlers);
+            settlers.setTile(null);
+            settlers.setPlayerSession(null);
         } else {
             GameLog.getInstance().addEntry(new LogEntry(playerSession, game.getTurnNumber(), "Cannot put on non empty tile."));
         }

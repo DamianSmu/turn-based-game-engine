@@ -1,6 +1,6 @@
 package com.example.engine.model.mapObject;
 
-import com.example.engine.model.Map;
+import com.example.engine.model.GameMap;
 import com.example.engine.model.PlayerSession;
 import com.example.engine.model.mapObject.units.Settlers;
 import com.example.engine.model.tile.Tile;
@@ -32,12 +32,12 @@ public class ObjectsGenerator {
         return result;
     }
 
-    public static void createInitialSettlersUnit(Map map, PlayerSession playerSession, long seed) {
-        placeObjectOnMap(map, new Settlers(playerSession), seed);
+    public static void createInitialSettlersUnit(GameMap gameMap, PlayerSession playerSession, long seed) {
+        placeObjectOnMap(gameMap, new Settlers(playerSession), seed);
     }
 
-    private static void placeObjectOnMap(Map map, MapObject mapObject, long seed) {
-        List<Tile> list = map.getTiles().stream().filter(t -> t.getType() == TileType.LAND).collect(Collectors.toList());
+    private static void placeObjectOnMap(GameMap gameMap, MapObject mapObject, long seed) {
+        List<Tile> list = gameMap.getTiles().stream().filter(t -> t.getType() == TileType.LAND).collect(Collectors.toList());
         Random random = new Random(seed);
         boolean placed = false;
         while (!placed) {
@@ -50,9 +50,9 @@ public class ObjectsGenerator {
         }
     }
 
-    public static void placeResources(Map map, long seed, TileType type) {
-        int RATE = map.getSize() / 5;
-        List<Tile> list = map.getTiles().stream().filter(t -> t.getType() == TileType.LAND).collect(Collectors.toList());
+    public static void placeResources(GameMap gameMap, long seed, TileType type) {
+        int RATE = gameMap.getSize() / 5;
+        List<Tile> list = gameMap.getTiles().stream().filter(t -> t.getType() == TileType.LAND).collect(Collectors.toList());
         Random random = new Random(seed);
         for (int i = 0; i < RATE; i++) {
             Tile tile = list.get(random.nextInt(list.size()));

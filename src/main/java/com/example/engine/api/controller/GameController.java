@@ -82,7 +82,6 @@ public class GameController {
         return ResponseEntity.ok().build();
     }
 
-
     @GetMapping("/{id}/status")
     public ResponseEntity<?> getStatus(@PathVariable String id) {
         Game game = gameRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Game id not found"));
@@ -110,7 +109,7 @@ public class GameController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Now it is not your turn");
         }
 
-        game.addUserActionRequest(new ActionRequest(body.getActionType(), body.getFrom(), body.getTo()));
+        game.addUserActionRequest(new ActionRequest(body.getActionType(), body.getFrom()));
         gameRepository.save(game);
         return ResponseEntity.ok(game.getActionRequests());
     }
