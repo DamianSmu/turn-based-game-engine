@@ -5,7 +5,7 @@ import com.example.engine.model.GameMap;
 import com.example.engine.model.mapObject.MapObject;
 import com.example.engine.model.mapObject.units.Settlers;
 import com.example.engine.model.mapObject.units.Unit;
-import com.example.engine.model.mapObject.units.UnitType;
+import com.example.engine.model.mapObject.units.Type;
 import com.example.engine.model.tile.Tile;
 import com.example.engine.model.utils.PositionXY;
 import org.springframework.http.HttpStatus;
@@ -44,7 +44,7 @@ public class ActionResolver {
 //                userAction = new RecruitUnit(settlement, UnitType.WARRIORS);
 //                break;
             case PUT_ON_SETTLEMENT:
-                if (unit.getUnitType() != UnitType.SETTLERS)
+                if (unit.getType() != Type.SETTLERS)
                 {
                     throw new CannotResolveActionException();
                 }
@@ -87,9 +87,9 @@ public class ActionResolver {
                 throw new CannotResolveActionException();
         }
         if (direction.getX() > gameMap.getSize() || direction.getX() < 0)
-            throw new ResponseException("Invalid position in requested action", HttpStatus.BAD_REQUEST);
+            throw new CannotResolveActionException("Invalid position in requested action");
         if (direction.getY() > gameMap.getSize() || direction.getY() < 0)
-            throw new ResponseException("Invalid position in requested action", HttpStatus.BAD_REQUEST);
+            throw new CannotResolveActionException("Invalid position in requested action");
         return direction;
     }
 }

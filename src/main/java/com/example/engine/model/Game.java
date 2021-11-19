@@ -6,9 +6,8 @@ import com.example.engine.model.actions.CannotResolveActionException;
 import com.example.engine.model.actions.UserAction;
 import com.example.engine.model.logs.GameLog;
 import com.example.engine.model.logs.LogEntry;
-import com.example.engine.model.mapObject.GoldApplier;
-import com.example.engine.model.mapObject.IronApplier;
 import com.example.engine.model.mapObject.ObjectsGenerator;
+import com.example.engine.model.mapObject.ResourceApplier;
 import com.example.engine.model.tile.Tile;
 import com.example.engine.model.tile.TileType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,47 +25,38 @@ public class Game {
 
     @Id
     private String id;
-
     @JsonIgnore
     private GameLog gameLog;
-
     @DBRef
-    private List<PlayerSession> playerSessions;
-
+    private List<User> users;
     private GameMap gameMap;
-
     private int turnNumber;
-
     private List<ActionRequest> actionRequests;
-
     private long seed;
-
     @DBRef
     private User founder;
-
     private GameState state;
-
     @DBRef
-    private PlayerSession currentTurnPlayerSession;
+    private User currentTurnUser;
 
     @PersistenceConstructor
-    public Game(String id, GameLog gameLog, List<PlayerSession> playerSessions, GameMap gameMap, int turnNumber, List<ActionRequest> actionRequests, long seed, User founder, GameState state, PlayerSession currentTurnPlayerSession) {
+    public Game(String id, GameLog gameLog, List<User> users, GameMap gameMap, int turnNumber, List<ActionRequest> actionRequests, long seed, User founder, GameState state, User currentTurnUser) {
         this.id = id;
         this.gameLog = gameLog;
-        this.playerSessions = playerSessions;
+        this.users = users;
         this.gameMap = gameMap;
         this.turnNumber = turnNumber;
         this.actionRequests = actionRequests;
         this.seed = seed;
         this.founder = founder;
         this.state = state;
-        this.currentTurnPlayerSession = currentTurnPlayerSession;
+        this.currentTurnUser = currentTurnUser;
     }
 
     public Game(long seed, User founder) {
         this.state = GameState.CREATED;
         this.founder = founder;
-        this.playerSessions = new ArrayList<>();
+        this.users = new ArrayList<>();
         this.turnNumber = 0;
         this.actionRequests = new ArrayList<>();
         this.gameLog = GameLog.getInstance();
@@ -80,80 +70,77 @@ public class Game {
         ObjectsGenerator.placeResources(gameMap, seed, TileType.GOLD);
         ObjectsGenerator.placeResources(gameMap, seed, TileType.IRON);
 
-        for (PlayerSession p : playerSessions) {
+        for (User p : users) {
             ObjectsGenerator.createInitialSettlersUnit(gameMap, p, seed);
         }
 
-        currentTurnPlayerSession = playerSessions.get(0);
+        currentTurnUser = users.get(0);
     }
 
-    public PlayerSession registerPlayer(User user) {
-        if (playerSessions.stream().noneMatch(p -> user.equals(p.getUser()))) {
-            PlayerSession session = new PlayerSession(user);
-            playerSessions.add(session);
-            return session;
+    public User registerPlayer(User user) {
+        if (users.stream().noneMatch(user::equals)) {
+            users.add(user);
+            return user;
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot register player.");
         }
     }
 
-    public PlayerSession takeTurn() {
+    public Game takeTurn() {
         for (ActionRequest actionRequest : actionRequests) {
             try {
                 UserAction action = ActionResolver.resolve(gameMap, actionRequest);
-                action.act(currentTurnPlayerSession, this);
-            } catch (CannotResolveActionException ex) {
-                GameLog.getInstance().addEntry(new LogEntry(currentTurnPlayerSession, turnNumber, "Cannot resolve action"));
+                action.act(currentTurnUser, this);
+            } catch (CannotResolveActionException e) {
+                GameLog.getInstance().addEntry(LogEntry.INVALID_ACTION(currentTurnUser, turnNumber, e.getMessage()));
+            } catch (Exception e) {
+                System.err.println("RESOLVING ACTION ERROR " + actionRequest.toString());
+                GameLog.getInstance().addEntry(LogEntry.INVALID_ACTION(currentTurnUser, turnNumber, e.getMessage()));
             }
         }
-        updateGoldAmount(currentTurnPlayerSession);
-        updateIronAmount(currentTurnPlayerSession);
+        updateResources(currentTurnUser);
 
         actionRequests = new ArrayList<>();
         turnNumber++;
 
-        int idx = playerSessions.indexOf(currentTurnPlayerSession);
-        PlayerSession sessionToReturn = currentTurnPlayerSession;
-        currentTurnPlayerSession = playerSessions.get(idx == playerSessions.size() - 1 ? 0 : ++idx);
+        int idx = users.indexOf(currentTurnUser);
+        currentTurnUser = users.get(idx == users.size() - 1 ? 0 : ++idx);
 
-        GameLog.getInstance().printForTurn(turnNumber - 1);
-        return sessionToReturn;
+        //checkEndConditions
+        return this;
     }
 
-    public void updateGoldAmount(PlayerSession playerSession) {
-        int goldAmount = playerSession.getGoldAmount();
-        goldAmount += gameMap.getTiles()
-                .stream()
-                .map(Tile::getMapObject)
-                .filter(x -> x instanceof GoldApplier && x.getPlayerSession().equals(playerSession))
-                .mapToInt(x -> ((GoldApplier) x).applyGold())
-                .sum();
-        playerSession.setGoldAmount(goldAmount);
+    private void updateResources(User user) {
+        gameMap.getTiles().stream().map(Tile::getMapObject).filter(x -> x instanceof ResourceApplier && x.getUser().equals(user)).forEach(x -> ((ResourceApplier) x).applyResources());
+
     }
 
-    public void updateIronAmount(PlayerSession playerSession) {
-        int ironAmount = playerSession.getGoldAmount();
-        ironAmount += gameMap.getTiles()
-                .stream().
-                map(Tile::getMapObject).
-                filter(x -> x instanceof IronApplier && x.getPlayerSession().equals(playerSession))
-                .mapToInt(x -> ((IronApplier) x).applyIron()).
-                sum();
-        playerSession.setGoldAmount(ironAmount);
+    private GameState checkEndConditions() {
+        int playersAlive = 0;
+        for (User user : users) {
+            if (gameMap.getTiles().stream().anyMatch(x -> x.getMapObject().getUser().equals(user))) {
+                playersAlive++;
+            }
+        }
+        if (playersAlive < 2) {
+            return GameState.FINISHED;
+        }
+        if (turnNumber > 200) {
+            return GameState.FINISHED;
+        }
+        return GameState.STARTED;
     }
-
-    //Getters, setters
 
     public void addUserActionRequest(ActionRequest action) {
         actionRequests.add(action);
     }
 
-    public List<PlayerSession> getPlayerSessions() {
-        return playerSessions;
+    public List<User> getUsers() {
+        return users;
     }
 
-    public void setPlayerSessions(List<PlayerSession> playerSessions) {
-        this.playerSessions = playerSessions;
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
     public GameMap getMap() {
@@ -172,12 +159,12 @@ public class Game {
         this.turnNumber = turnNumber;
     }
 
-    public void setPlayers(List<PlayerSession> playerSessions) {
-        this.playerSessions = playerSessions;
+    public void setPlayers(List<User> users) {
+        this.users = users;
     }
 
     public int getPlayersCount() {
-        return playerSessions.size();
+        return users.size();
     }
 
     public User getFounder() {
@@ -228,11 +215,11 @@ public class Game {
         this.state = state;
     }
 
-    public PlayerSession getCurrentTurnPlayerSession() {
-        return currentTurnPlayerSession;
+    public User getCurrentTurnUser() {
+        return currentTurnUser;
     }
 
-    public void setCurrentTurnPlayerSession(PlayerSession currentTurnPlayerSession) {
-        this.currentTurnPlayerSession = currentTurnPlayerSession;
+    public void setCurrentTurnUser(User currentTurnUser) {
+        this.currentTurnUser = currentTurnUser;
     }
 }

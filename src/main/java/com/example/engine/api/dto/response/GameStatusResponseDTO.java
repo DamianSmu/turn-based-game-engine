@@ -1,7 +1,6 @@
 package com.example.engine.api.dto.response;
 
 import com.example.engine.model.GameState;
-import com.example.engine.model.PlayerSession;
 import com.example.engine.model.User;
 
 import java.util.List;
@@ -9,11 +8,11 @@ import java.util.List;
 public class GameStatusResponseDTO {
 
     private String id;
-    private List<PlayerSession> playerSessions;
+    private List<User> users;
     private int turnNumber;
     private User founder;
     private GameState state;
-    private PlayerSession currentTurn;
+    private User currentTurn;
 
     public String getId() {
         return id;
@@ -23,12 +22,12 @@ public class GameStatusResponseDTO {
         this.id = id;
     }
 
-    public List<PlayerSession> getPlayerSessions() {
-        return playerSessions;
+    public List<User> getUsers() {
+        return users;
     }
 
-    public void setPlayerSessions(List<PlayerSession> playerSessions) {
-        this.playerSessions = playerSessions;
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
     public int getTurnNumber() {
@@ -55,11 +54,11 @@ public class GameStatusResponseDTO {
         this.state = state;
     }
 
-    public PlayerSession getCurrentTurn() {
+    public User getCurrentTurn() {
         return currentTurn;
     }
 
-    public void setCurrentTurn(PlayerSession currentTurn) {
+    public void setCurrentTurn(User currentTurn) {
         this.currentTurn = currentTurn;
     }
 }

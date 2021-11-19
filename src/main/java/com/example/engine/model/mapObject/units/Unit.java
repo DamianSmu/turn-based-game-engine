@@ -1,24 +1,24 @@
 package com.example.engine.model.mapObject.units;
 
-import com.example.engine.model.PlayerSession;
+import com.example.engine.model.User;
 import com.example.engine.model.mapObject.MapObject;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 public class Unit extends MapObject {
-    private final UnitType unitType;
+    private final Type type;
 
     @PersistenceConstructor
-    public Unit(String id, PlayerSession playerSession, int actionInTurnNumber, double defence, double offence, UnitType unitType) {
-        super(id, playerSession, actionInTurnNumber, defence, offence);
-        this.unitType = unitType;
+    public Unit(String id, User user, int actionInTurnNumber, double defence, double offence, Type type) {
+        super(id, user, actionInTurnNumber, defence, offence);
+        this.type = type;
     }
 
-    public Unit(PlayerSession playerSession, double defence, double offence, UnitType unitType) {
-        super(playerSession, defence, offence);
-        this.unitType = unitType;
+    public Unit(User user, double defence, double offence, Type type) {
+        super(user, defence, offence);
+        this.type = type;
     }
 
-    public UnitType getUnitType() {
-        return unitType;
+    public Type getType() {
+        return type;
     }
 }

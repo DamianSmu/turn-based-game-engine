@@ -1,7 +1,7 @@
 package com.example.engine.model.actions;
 
 import com.example.engine.model.Game;
-import com.example.engine.model.PlayerSession;
+import com.example.engine.model.User;
 import com.example.engine.model.logs.GameLog;
 import com.example.engine.model.logs.LogEntry;
 import com.example.engine.model.mapObject.Settlement;
@@ -18,27 +18,24 @@ public class PutOnSettlement implements UserAction {
     }
 
     @Override
-    public void act(PlayerSession playerSession, Game game) {
-        if (!settlers.getPlayerSession().equals(playerSession)) {
-            GameLog.getInstance().addEntry(LogEntry.OBJECT_DOES_NOT_BELONG_TO_PLAYER(playerSession, game.getTurnNumber()));
-            return;
+    public void act(User user, Game game) {
+        if (!settlers.getUser().equals(user)) {
+            throw new CannotResolveActionException("Object does not belong to player.");
         }
         if (settlers.actionInTurnNumber() == game.getTurnNumber()) {
-            GameLog.getInstance().addEntry(LogEntry.UNIT_HAS_TAKEN_ACTION_IN_CURRENT_TURN(playerSession, game.getTurnNumber()));
-            return;
+            throw new CannotResolveActionException("Unit has taken action in current turn.");
         }
         if (settlers.getTile().getType() == TileType.WATER) {
-            GameLog.getInstance().addEntry(new LogEntry(playerSession, game.getTurnNumber(), "Cannot put on settlement on water."));
-            return;
+            throw new CannotResolveActionException("Cannot put on settlement on water.");
         }
 
         Tile tile = settlers.getTile();
         if (tile.equals(settlers.getTile())) {
-            tile.setMapObject(new Settlement(playerSession));
+            tile.setMapObject(new Settlement(user));
             settlers.setTile(null);
-            settlers.setPlayerSession(null);
+            settlers.setUser(null);
         } else {
-            GameLog.getInstance().addEntry(new LogEntry(playerSession, game.getTurnNumber(), "Cannot put on non empty tile."));
+            throw new CannotResolveActionException("Cannot put on non empty tile.");
         }
     }
 }

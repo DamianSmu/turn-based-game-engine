@@ -1,10 +1,9 @@
 package com.example.engine.model.mapObject;
 
 
-import com.example.engine.model.PlayerSession;
+import com.example.engine.model.User;
 import com.example.engine.model.tile.Tile;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -17,7 +16,7 @@ public class MapObject {
     private String id = UUID.randomUUID().toString();
 
     @DBRef
-    private PlayerSession playerSession;
+    private User user;
 
     private int actionInTurnNumber;
     private double defence;
@@ -27,17 +26,17 @@ public class MapObject {
     @JsonIgnore
     private Tile tile;
 
-    public MapObject(PlayerSession playerSession, double defence, double offence) {
-        this.playerSession = playerSession;
+    public MapObject(User user, double defence, double offence) {
+        this.user = user;
         this.actionInTurnNumber = -1;
         this.defence = defence;
         this.offence = offence;
     }
 
     @PersistenceConstructor
-    public MapObject(String id, PlayerSession playerSession, int actionInTurnNumber, double defence, double offence) {
+    public MapObject(String id, User user, int actionInTurnNumber, double defence, double offence) {
         this.id = id;
-        this.playerSession = playerSession;
+        this.user = user;
         this.actionInTurnNumber = actionInTurnNumber;
         this.defence = defence;
         this.offence = offence;
@@ -47,12 +46,12 @@ public class MapObject {
         return id;
     }
 
-    public PlayerSession getPlayerSession() {
-        return playerSession;
+    public User getUser() {
+        return user;
     }
 
-    public void setPlayerSession(PlayerSession playerSession) {
-        this.playerSession = playerSession;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public int actionInTurnNumber() {

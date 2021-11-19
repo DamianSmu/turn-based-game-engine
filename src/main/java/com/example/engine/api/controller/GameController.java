@@ -2,13 +2,17 @@ package com.example.engine.api.controller;
 
 import com.example.engine.api.dto.request.ActionRequestDTO;
 import com.example.engine.api.dto.response.GameStatusResponseDTO;
+import com.example.engine.api.dto.response.TurnResponseDTO;
 import com.example.engine.api.repository.GameRepository;
-import com.example.engine.api.repository.PlayerSessionRepository;
+import com.example.engine.api.repository.UserRepository;
 import com.example.engine.api.service.UserService;
 import com.example.engine.model.Game;
-import com.example.engine.model.PlayerSession;
 import com.example.engine.model.User;
 import com.example.engine.model.actions.ActionRequest;
+import com.example.engine.model.actions.CannotResolveActionException;
+import com.example.engine.model.logs.GameLog;
+import com.example.engine.model.logs.LogEntry;
+import com.example.engine.model.utils.PositionXY;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -26,12 +30,12 @@ public class GameController {
 
     private final GameRepository gameRepository;
     private final UserService userService;
-    private final PlayerSessionRepository playerSessionRepository;
+    private final UserRepository userRepository;
 
-    public GameController(GameRepository gameRepository, UserService userService, PlayerSessionRepository playerSessionRepository) {
+    public GameController(GameRepository gameRepository, UserService userService, UserRepository userRepository) {
         this.gameRepository = gameRepository;
         this.userService = userService;
-        this.playerSessionRepository = playerSessionRepository;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/all")
@@ -43,9 +47,9 @@ public class GameController {
             response.setId(game.getId());
             response.setFounder(game.getFounder());
             response.setState(game.getState());
-            response.setPlayerSessions(game.getPlayerSessions());
+            response.setUsers(game.getUsers());
             response.setTurnNumber(game.getTurnNumber());
-            response.setCurrentTurn(game.getCurrentTurnPlayerSession());
+            response.setCurrentTurn(game.getCurrentTurnUser());
             responses.add(response);
         }
         return ResponseEntity.ok(responses);
@@ -55,7 +59,7 @@ public class GameController {
     public ResponseEntity<?> createGame(Authentication authentication) {
         User user = userService.getUser(authentication);
         Game game = new Game(new Random().nextLong(), user);
-        playerSessionRepository.save(game.registerPlayer(user));
+        userRepository.save(game.registerPlayer(user));
         gameRepository.save(game);
         return ResponseEntity.status(HttpStatus.CREATED).body(game.getId());
     }
@@ -64,7 +68,7 @@ public class GameController {
     public ResponseEntity<?> connectToGame(Authentication authentication, @PathVariable String id) {
         User user = userService.getUser(authentication);
         Game game = gameRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Game id not found"));
-        PlayerSession session = playerSessionRepository.save(game.registerPlayer(user));
+        User session = userRepository.save(game.registerPlayer(user));
         gameRepository.save(game);
         return ResponseEntity.ok(session);
     }
@@ -89,9 +93,9 @@ public class GameController {
         response.setId(game.getId());
         response.setFounder(game.getFounder());
         response.setState(game.getState());
-        response.setPlayerSessions(game.getPlayerSessions());
+        response.setUsers(game.getUsers());
         response.setTurnNumber(game.getTurnNumber());
-        response.setCurrentTurn(game.getCurrentTurnPlayerSession());
+        response.setCurrentTurn(game.getCurrentTurnUser());
         return ResponseEntity.ok(response);
     }
 
@@ -102,14 +106,15 @@ public class GameController {
     }
 
     @PostMapping("/{id}/action")
-    public ResponseEntity<?> postAction(Authentication authentication, @PathVariable String id, @RequestBody ActionRequestDTO body) {
+    public ResponseEntity<?> postAction(Authentication authentication, @PathVariable String id, @RequestBody List<ActionRequestDTO> body) {
         Game game = gameRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Game id not found"));
         User user = userService.getUser(authentication);
-        if (!user.equals(game.getCurrentTurnPlayerSession().getUser())) {
+        if (!user.equals(game.getCurrentTurnUser())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Now it is not your turn");
         }
-
-        game.addUserActionRequest(new ActionRequest(body.getActionType(), body.getFrom()));
+        for( ActionRequestDTO action : body) {
+            game.addUserActionRequest(new ActionRequest(action.getActionType(), new PositionXY(action.getX(), action.getY())));
+        }
         gameRepository.save(game);
         return ResponseEntity.ok(game.getActionRequests());
     }
@@ -121,14 +126,27 @@ public class GameController {
     }
 
     @PostMapping("/{id}/takeTurn")
-    public ResponseEntity<?> postAction(Authentication authentication, @PathVariable String id) {
+    public ResponseEntity<?> takeTurn(Authentication authentication, @PathVariable String id) {
         Game game = gameRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Game id not found"));
         User user = userService.getUser(authentication);
-        if (!user.equals(game.getCurrentTurnPlayerSession().getUser())) {
+        if (!user.equals(game.getCurrentTurnUser())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Now this is not your turn");
         }
-        playerSessionRepository.save(game.takeTurn());
-        gameRepository.save(game);
-        return ResponseEntity.ok(game.getActionRequests());
+        gameRepository.save(game.takeTurn());
+        long invalidActions = GameLog.getInstance().getForTurn(game.getTurnNumber() - 1).filter(x -> x.getTag().equals(LogEntry.INVALID_ACTION)).count();
+        return ResponseEntity.ok(new TurnResponseDTO(invalidActions, true)); //todo
     }
+
+//    @PostMapping("/{id}/reset")
+//    public ResponseEntity<?> reset(Authentication authentication, @PathVariable String id) {
+//        Game game = gameRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Game id not found"));
+//        User user = userService.getUser(authentication);
+//        if (game.getFounder().equals(user)) {
+//            game.start();
+//            gameRepository.save(game);
+//        } else {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You are not founder of this game.");
+//        }
+//        return ResponseEntity.ok().build();
+//    }
 }

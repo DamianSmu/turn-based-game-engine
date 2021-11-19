@@ -27,4 +27,8 @@ public class ActionRequest {
         this.from = from;
     }
 
+    @Override
+    public String toString() {
+        return "ActionRequest{" + "actionType=" + actionType + ", from=" + from.toString() + '}';
+    }
 }

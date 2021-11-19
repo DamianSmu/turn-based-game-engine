@@ -5,6 +5,7 @@ import org.springframework.data.annotation.PersistenceConstructor;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class GameLog implements Serializable {
     private static GameLog instance;
@@ -30,7 +31,7 @@ public class GameLog implements Serializable {
         log.add(entry);
     }
 
-    public void printForTurn(int turn) {
-        log.stream().filter(entry -> entry.getTurnNumber() == turn).forEach(System.out::println);
+    public Stream<LogEntry> getForTurn(int turn) {
+        return log.stream().filter(entry -> entry.getTurnNumber() == turn);
     }
 }

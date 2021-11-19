@@ -1,7 +1,7 @@
 package com.example.engine.model.actions;
 
 import com.example.engine.model.Game;
-import com.example.engine.model.PlayerSession;
+import com.example.engine.model.User;
 import com.example.engine.model.logs.GameLog;
 import com.example.engine.model.logs.LogEntry;
 import com.example.engine.model.mapObject.units.Unit;
@@ -13,12 +13,6 @@ public class MoveUnit implements UserAction {
     private final int newX;
     private final int newY;
 
-    public MoveUnit(Unit unit, int newX, int newY) {
-        this.unit = unit;
-        this.newX = newX;
-        this.newY = newY;
-    }
-
     public MoveUnit(Unit unit, PositionXY positionXY) {
         this.unit = unit;
         this.newX = positionXY.getX();
@@ -26,21 +20,19 @@ public class MoveUnit implements UserAction {
     }
 
     @Override
-    public void act(PlayerSession playerSession, Game game) {
-        if (!unit.getPlayerSession().equals(playerSession)) {
-            GameLog.getInstance().addEntry(LogEntry.OBJECT_DOES_NOT_BELONG_TO_PLAYER(playerSession, game.getTurnNumber()));
-            return;
+    public void act(User user, Game game) {
+        if (!unit.getUser().equals(user)) {
+            throw new CannotResolveActionException("Object does not belong to player.");
         }
 
         if (unit.actionInTurnNumber() == game.getTurnNumber()) {
-            GameLog.getInstance().addEntry(LogEntry.UNIT_HAS_TAKEN_ACTION_IN_CURRENT_TURN(playerSession, game.getTurnNumber()));
-            return;
+            throw new CannotResolveActionException("Unit has taken action in current turn.");
         }
 
         PositionXY pos = unit.getTile().getPosition();
         if (Math.abs(pos.getX() - newX) > 1 || Math.abs(pos.getY() - newY) > 1) {
-            GameLog.getInstance().addEntry(new LogEntry(playerSession, game.getTurnNumber(), "Cannot move, too far."));
-            return;
+            throw new CannotResolveActionException("Cannot move, too far.");
+
         }
 
         Tile newTile = game.getMap().getTileXY(newX, newY);
@@ -48,7 +40,7 @@ public class MoveUnit implements UserAction {
             unit.getTile().moveMapObject(unit, newTile);
             unit.setActionInTurnNumber(game.getTurnNumber());
         } else {
-            GameLog.getInstance().addEntry(new LogEntry(playerSession, game.getTurnNumber(), "Cannot put on non empty tile."));
+            throw new CannotResolveActionException("Cannot put on non empty tile.");
         }
     }
 }

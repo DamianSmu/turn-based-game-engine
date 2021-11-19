@@ -1,47 +1,44 @@
 package com.example.engine.model.actions;
 
 import com.example.engine.model.Game;
-import com.example.engine.model.PlayerSession;
+import com.example.engine.model.User;
 import com.example.engine.model.logs.GameLog;
 import com.example.engine.model.logs.LogEntry;
 import com.example.engine.model.mapObject.Settlement;
 import com.example.engine.model.mapObject.units.Settlers;
 import com.example.engine.model.mapObject.units.Unit;
-import com.example.engine.model.mapObject.units.UnitType;
+import com.example.engine.model.mapObject.units.Type;
 import com.example.engine.model.mapObject.units.Warriors;
 
 public class RecruitUnit implements UserAction {
     private final Settlement settlement;
-    private final UnitType unitType;
+    private final Type type;
 
-    public RecruitUnit(Settlement settlement, UnitType unitType) {
+    public RecruitUnit(Settlement settlement, Type type) {
         this.settlement = settlement;
-        this.unitType = unitType;
+        this.type = type;
     }
 
     @Override
-    public void act(PlayerSession playerSession, Game game) {
-        if (!settlement.getPlayerSession().equals(playerSession)) {
-            GameLog.getInstance().addEntry(LogEntry.OBJECT_DOES_NOT_BELONG_TO_PLAYER(playerSession, game.getTurnNumber()));
-            return;
+    public void act(User user, Game game) {
+        if (!settlement.getUser().equals(user)) {
+            throw new CannotResolveActionException("Object does not belong to player.");
         }
 
         if (settlement.actionInTurnNumber() == game.getTurnNumber()) {
-            GameLog.getInstance().addEntry(LogEntry.UNIT_HAS_TAKEN_ACTION_IN_CURRENT_TURN(playerSession, game.getTurnNumber()));
-            return;
+            throw new CannotResolveActionException("Unit has taken action in current turn.");
         }
 
         Unit unit;
-        switch (unitType) {
+        switch (type) {
             case SETTLERS:
-                unit = new Settlers(playerSession);
+                unit = new Settlers(user);
                 break;
             case WARRIORS:
-                unit = new Warriors(playerSession);
+                unit = new Warriors(user);
                 break;
             default:
-                GameLog.getInstance().addEntry(new LogEntry(playerSession, game.getTurnNumber(), "Invalid unit type."));
-                return;
+                throw new CannotResolveActionException("Invalid unit type.");
         }
 
 

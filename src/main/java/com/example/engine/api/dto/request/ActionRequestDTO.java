@@ -6,7 +6,8 @@ import com.example.engine.model.utils.PositionXY;
 
 public class ActionRequestDTO {
     private ActionType actionType;
-    private PositionXY from;
+    private int x;
+    private int y;
 
     public ActionType getActionType() {
         return actionType;
@@ -16,11 +17,19 @@ public class ActionRequestDTO {
         this.actionType = actionType;
     }
 
-    public PositionXY getFrom() {
-        return from;
+    public int getX() {
+        return x;
     }
 
-    public void setFrom(PositionXY from) {
-        this.from = from;
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 }

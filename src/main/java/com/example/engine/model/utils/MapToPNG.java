@@ -74,15 +74,15 @@ public class MapToPNG {
             if (o instanceof Settlers)
             {
                 g.drawImage(SETTLERS_TEX, x * TEX_SIZE, y * TEX_SIZE, null);
-                g.drawString(o.getPlayerSession().getUser().getUsername(), x * TEX_SIZE, y * TEX_SIZE);
+                g.drawString(o.getUser().getUsername(), x * TEX_SIZE, y * TEX_SIZE);
             } else if (o instanceof Warriors)
             {
                 g.drawImage(WARRIORS_TEX, x * TEX_SIZE, y * TEX_SIZE, null);
-                g.drawString(o.getPlayerSession().getUser().getUsername(), x * TEX_SIZE, y * TEX_SIZE);
+                g.drawString(o.getUser().getUsername(), x * TEX_SIZE, y * TEX_SIZE);
             } else if (o instanceof Settlement)
             {
                 g.drawImage(SETTLEMENT_TEX, x * TEX_SIZE, y * TEX_SIZE, null);
-                g.drawString(o.getPlayerSession().getUser().getUsername(), x * TEX_SIZE, y * TEX_SIZE);
+                g.drawString(o.getUser().getUsername(), x * TEX_SIZE, y * TEX_SIZE);
             }
         }
 

@@ -1,7 +1,7 @@
 package com.example.engine.model.mapObject;
 
 import com.example.engine.model.GameMap;
-import com.example.engine.model.PlayerSession;
+import com.example.engine.model.User;
 import com.example.engine.model.mapObject.units.Settlers;
 import com.example.engine.model.tile.Tile;
 import com.example.engine.model.tile.TileType;
@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 public class ObjectsGenerator {
 
     public static List<Tile> generateTiles(int size, long seed) {
-        final double FREQUENCY = 18d;
-        final double LEVEL = 0.1d;
+        final double FREQUENCY = 8d;
+        final double LEVEL = 0.05d;
 
         OpenSimplex2S noise = new OpenSimplex2S(seed);
         List<Tile> result = new ArrayList<>();
@@ -32,8 +32,8 @@ public class ObjectsGenerator {
         return result;
     }
 
-    public static void createInitialSettlersUnit(GameMap gameMap, PlayerSession playerSession, long seed) {
-        placeObjectOnMap(gameMap, new Settlers(playerSession), seed);
+    public static void createInitialSettlersUnit(GameMap gameMap, User user, long seed) {
+        placeObjectOnMap(gameMap, new Settlers(user), seed);
     }
 
     private static void placeObjectOnMap(GameMap gameMap, MapObject mapObject, long seed) {

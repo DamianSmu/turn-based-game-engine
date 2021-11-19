@@ -2,11 +2,10 @@ package com.example.engine.model.actions;
 
 
 import com.example.engine.model.Game;
-import com.example.engine.model.PlayerSession;
+import com.example.engine.model.User;
 import com.example.engine.model.logs.GameLog;
 import com.example.engine.model.logs.LogEntry;
 import com.example.engine.model.mapObject.MapObject;
-import com.example.engine.model.mapObject.Settlement;
 import com.example.engine.model.mapObject.units.Unit;
 import com.example.engine.model.utils.PositionXY;
 
@@ -22,22 +21,19 @@ public class Attack implements UserAction {
     }
 
     @Override
-    public void act(PlayerSession playerSession, Game game) {
-        if (!unit.getPlayerSession().equals(playerSession)) {
-            GameLog.getInstance().addEntry(LogEntry.OBJECT_DOES_NOT_BELONG_TO_PLAYER(playerSession, game.getTurnNumber()));
-            return;
+    public void act(User user, Game game) {
+        if (!unit.getUser().equals(user)) {
+            throw new CannotResolveActionException("Object does not belong to player.");
         }
 
         if (unit.actionInTurnNumber() == game.getTurnNumber()) {
-            GameLog.getInstance().addEntry(LogEntry.UNIT_HAS_TAKEN_ACTION_IN_CURRENT_TURN(playerSession, game.getTurnNumber()));
-            return;
+            throw new CannotResolveActionException("Unit has taken action in current turn.");
         }
 
         PositionXY settlementPos = mapObject.getTile().getPosition();
         PositionXY pos = unit.getTile().getPosition();
         if (Math.abs(pos.getX() - settlementPos.getX()) > 1 || Math.abs(pos.getY() - settlementPos.getY()) > 1) {
-            GameLog.getInstance().addEntry(new LogEntry(playerSession, game.getTurnNumber(), "Cannot attack, too far."));
-            return;
+            throw new CannotResolveActionException("Cannot attack, too far.");
         }
 
         Random rand = new Random();
@@ -48,6 +44,8 @@ public class Attack implements UserAction {
             unit.getTile().moveMapObject(unit, mapObject.getTile());
             mapObject.getTile().deleteMapObject(mapObject);
             unit.setActionInTurnNumber(game.getTurnNumber());
+            // todo Przejmowanie miast
+
         }
 
         if (unit.getDefence() <= 0) {
