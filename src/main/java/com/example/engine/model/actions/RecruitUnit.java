@@ -9,6 +9,7 @@ import com.example.engine.model.mapObject.units.Settlers;
 import com.example.engine.model.mapObject.units.Unit;
 import com.example.engine.model.mapObject.units.Type;
 import com.example.engine.model.mapObject.units.Warriors;
+import com.example.engine.model.utils.PositionXY;
 
 public class RecruitUnit implements UserAction {
     private final Settlement settlement;
@@ -32,19 +33,42 @@ public class RecruitUnit implements UserAction {
         Unit unit;
         switch (type) {
             case SETTLERS:
+                if( settlement.getGoldAmount() < Settlers.RECRUIT_GOLD_COST) {
+                    throw new CannotResolveActionException("Not enough gold to recruit settlers.");
+                }
                 unit = new Settlers(user);
                 break;
             case WARRIORS:
+                if(settlement.getIronAmount() < Warriors.RECRUIT_IRON_COST) {
+                    throw new CannotResolveActionException("Not enough iron to recruit warriors.");
+                }
                 unit = new Warriors(user);
                 break;
             default:
-                throw new CannotResolveActionException("Invalid unit type.");
+                throw new CannotResolveActionException("Unknown unit type.");
         }
 
+        int[] xx = new int[]{0, 1, -1};
+        int[] yy = new int[]{1, 0, -1};
 
-        //TODO place unit method
+        boolean placed = false;
+        for (int x : xx){
+            for (int y : yy){
+                PositionXY newPos = new PositionXY(settlement.getTile().getPosition().getX() + x, settlement.getTile().getPosition().getY() + y);
+                if(game.getMap().getTileFromPosition(newPos).isEmpty()) {
+                    game.getMap().getTileFromPosition(newPos).setMapObject(unit);
+                    placed = true;
+                    break;
+                }
+                if(placed) {
+                    break;
+                }
+            }
+        }
+        if(!placed) {
+            throw new CannotResolveActionException("No tile to place unit.");
+        }
 
         settlement.setActionInTurnNumber(game.getTurnNumber());
-        unit.setActionInTurnNumber(game.getTurnNumber());
     }
 }

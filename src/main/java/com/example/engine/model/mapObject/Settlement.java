@@ -8,7 +8,7 @@ public class Settlement extends MapObject implements ResourceApplier {
 
     private static final double INIT_DEFENCE = 200;
     private static final int GOLD_PRODUCTION_WITH_GOLD_DEPOSIT = 50;
-    private static final int GOLD_PRODUCTION_WITHOUT_GOLD_DEPOSIT = 5;
+    private static final int GOLD_PRODUCTION_WITHOUT_GOLD_DEPOSIT = 10;
     private static final int IRON_PRODUCTION_WITH_IRON_DEPOSIT = 50;
 
     private int goldAmount;
@@ -23,7 +23,7 @@ public class Settlement extends MapObject implements ResourceApplier {
     }
 
     public Settlement(User user) {
-        super(user, INIT_DEFENCE, INIT_DEFENCE);
+        super(user, INIT_DEFENCE, 0);
         this.goldAmount = 0;
         this.ironAmount = 0;
     }

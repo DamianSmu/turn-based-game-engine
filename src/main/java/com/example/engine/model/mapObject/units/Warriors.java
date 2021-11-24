@@ -4,8 +4,9 @@ import com.example.engine.model.User;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 public class Warriors extends Unit {
-    private static final double DEFENCE = 50;
-    private static final double OFFENCE = 30;
+    public static final double DEFENCE = 50;
+    public static final double OFFENCE = 30;
+    public static final double RECRUIT_IRON_COST = 200;
 
     public Warriors(User user) {
         super(user, DEFENCE, OFFENCE, Type.WARRIORS);

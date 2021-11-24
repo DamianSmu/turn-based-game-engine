@@ -133,7 +133,29 @@ public class GameController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Now this is not your turn");
         }
         gameRepository.save(game.takeTurn());
-        long invalidActions = GameLog.getInstance().getForTurn(game.getTurnNumber() - 1).filter(x -> x.getTag().equals(LogEntry.INVALID_ACTION)).count();
+        long invalidActions = game.getGameLog().getForTurnAndUser(game.getTurnNumber() - 1, user).filter(x -> x.getTag().equals(LogEntry.INVALID_ACTION)).count();
+        System.out.println(invalidActions);
+        return ResponseEntity.ok(new TurnResponseDTO(invalidActions, true)); //todo
+    }
+
+    @PostMapping("/{id}/postActionAndTakeTurn")
+    public ResponseEntity<?> postActionAndTakeTurn(Authentication authentication, @PathVariable String id, @RequestBody List<ActionRequestDTO> body) {
+        Game game = gameRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Game id not found"));
+        User user = userService.getUser(authentication);
+        if (!user.equals(game.getCurrentTurnUser())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Now it is not your turn");
+        }
+        for( ActionRequestDTO action : body) {
+            game.addUserActionRequest(new ActionRequest(action.getActionType(), new PositionXY(action.getX(), action.getY())));
+        }
+        gameRepository.save(game.takeTurn());
+        long invalidActions = game.getGameLog().getForTurnAndUser(game.getTurnNumber() - 1, user).filter(x -> x.getTag().equals(LogEntry.INVALID_ACTION)).count();
+        if(body.isEmpty()) {
+            System.out.println("");
+        }
+        if(invalidActions > 1){
+            System.out.println(invalidActions);
+        }
         return ResponseEntity.ok(new TurnResponseDTO(invalidActions, true)); //todo
     }
 

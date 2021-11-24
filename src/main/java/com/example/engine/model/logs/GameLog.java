@@ -1,5 +1,6 @@
 package com.example.engine.model.logs;
 
+import com.example.engine.model.User;
 import org.springframework.data.annotation.PersistenceConstructor;
 
 import java.io.Serializable;
@@ -20,18 +21,11 @@ public class GameLog implements Serializable {
         this.log = new ArrayList<>();
     }
 
-    public static GameLog getInstance() {
-        if (instance == null) {
-            instance = new GameLog();
-        }
-        return instance;
-    }
-
     public void addEntry(LogEntry entry) {
         log.add(entry);
     }
 
-    public Stream<LogEntry> getForTurn(int turn) {
-        return log.stream().filter(entry -> entry.getTurnNumber() == turn);
+    public Stream<LogEntry> getForTurnAndUser(int turn, User user) {
+        return log.stream().filter(entry -> entry.getTurnNumber() == turn && entry.getUser().equals(user));
     }
 }

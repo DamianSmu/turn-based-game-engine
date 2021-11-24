@@ -32,24 +32,6 @@ public class Tile {
         }
     }
 
-    //    @JsonIgnore
-//    public List<Tile> getNeighbours() {
-//        int size = map.getSize();
-//        PositionXY pos = this.getPosition();
-//        int x = pos.getX();
-//        int y = pos.getY();
-//        List<Tile> result = new ArrayList<>();
-//        if (x > 0) result.add(map.getTileXY(x - 1, y));
-//        if (y > 0) result.add(map.getTileXY(x, y - 1));
-//        if (x < size) result.add(map.getTileXY(x + 1, y));
-//        if (y < size) result.add(map.getTileXY(x, y + 1));
-//        if (x > 0 && y < size) result.add(map.getTileXY(x - 1, y + 1));
-//        if (x > 0 && y > 0) result.add(map.getTileXY(x - 1, y - 1));
-//        if (x < size && y < size) result.add(map.getTileXY(x + 1, y + 1));
-//        if (y < size && x > 0) result.add(map.getTileXY(x + 1, y - 1));
-//        return result;
-//    }
-
     @JsonIgnore
     public boolean isEmpty() {
         return mapObject == null;

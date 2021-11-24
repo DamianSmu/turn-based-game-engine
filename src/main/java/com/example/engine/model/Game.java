@@ -59,13 +59,14 @@ public class Game {
         this.users = new ArrayList<>();
         this.turnNumber = 0;
         this.actionRequests = new ArrayList<>();
-        this.gameLog = GameLog.getInstance();
+        this.gameLog = new GameLog();
         this.seed = seed;
     }
 
     public void start() {
+        gameLog = new GameLog();
         state = GameState.STARTED;
-        gameMap = new GameMap(10, seed);
+        gameMap = new GameMap(20, seed);
         gameMap.createTiles();
         ObjectsGenerator.placeResources(gameMap, seed, TileType.GOLD);
         ObjectsGenerator.placeResources(gameMap, seed, TileType.IRON);
@@ -92,10 +93,10 @@ public class Game {
                 UserAction action = ActionResolver.resolve(gameMap, actionRequest);
                 action.act(currentTurnUser, this);
             } catch (CannotResolveActionException e) {
-                GameLog.getInstance().addEntry(LogEntry.INVALID_ACTION(currentTurnUser, turnNumber, e.getMessage()));
+                gameLog.addEntry(LogEntry.INVALID_ACTION(currentTurnUser, turnNumber, e.getMessage()));
             } catch (Exception e) {
                 System.err.println("RESOLVING ACTION ERROR " + actionRequest.toString());
-                GameLog.getInstance().addEntry(LogEntry.INVALID_ACTION(currentTurnUser, turnNumber, e.getMessage()));
+                gameLog.addEntry(LogEntry.INVALID_ACTION(currentTurnUser, turnNumber, e.getMessage()));
             }
         }
         updateResources(currentTurnUser);
