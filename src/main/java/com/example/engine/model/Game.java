@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 public class Game {
@@ -32,7 +33,7 @@ public class Game {
     private GameMap gameMap;
     private int turnNumber;
     private List<ActionRequest> actionRequests;
-    private long seed;
+    private long seed = 0;
     @DBRef
     private User founder;
     private GameState state;
@@ -53,17 +54,18 @@ public class Game {
         this.currentTurnUser = currentTurnUser;
     }
 
-    public Game(long seed, User founder) {
+    public Game(User founder) {
         this.state = GameState.CREATED;
         this.founder = founder;
         this.users = new ArrayList<>();
         this.turnNumber = 0;
         this.actionRequests = new ArrayList<>();
         this.gameLog = new GameLog();
-        this.seed = seed;
     }
 
     public void start() {
+        this.seed = new Random().nextLong();
+        this.turnNumber = 0;
         gameLog = new GameLog();
         state = GameState.STARTED;
         gameMap = new GameMap(20, seed);

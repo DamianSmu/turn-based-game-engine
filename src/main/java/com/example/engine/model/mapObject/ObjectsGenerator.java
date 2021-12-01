@@ -51,7 +51,7 @@ public class ObjectsGenerator {
     }
 
     public static void placeResources(GameMap gameMap, long seed, TileType type) {
-        int RATE = gameMap.getSize() / 5;
+        int RATE = gameMap.getSize() / 4;
         List<Tile> list = gameMap.getTiles().stream().filter(t -> t.getType() == TileType.LAND).collect(Collectors.toList());
         Random random = new Random(seed);
         for (int i = 0; i < RATE; i++) {

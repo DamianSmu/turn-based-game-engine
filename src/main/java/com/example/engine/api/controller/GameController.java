@@ -58,7 +58,7 @@ public class GameController {
     @PostMapping("/")
     public ResponseEntity<?> createGame(Authentication authentication) {
         User user = userService.getUser(authentication);
-        Game game = new Game(new Random().nextLong(), user);
+        Game game = new Game(user);
         userRepository.save(game.registerPlayer(user));
         gameRepository.save(game);
         return ResponseEntity.status(HttpStatus.CREATED).body(game.getId());
