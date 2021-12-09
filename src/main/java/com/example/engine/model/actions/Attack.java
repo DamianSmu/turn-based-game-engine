@@ -44,8 +44,6 @@ public class Attack implements UserAction {
             unit.getTile().moveMapObject(unit, mapObject.getTile());
             mapObject.getTile().deleteMapObject(mapObject);
             unit.setActionInTurnNumber(game.getTurnNumber());
-            // todo Przejmowanie miast
-
         }
 
         if (unit.getDefence() <= 0) {

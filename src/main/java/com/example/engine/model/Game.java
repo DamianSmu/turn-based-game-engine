@@ -101,15 +101,17 @@ public class Game {
                 gameLog.addEntry(LogEntry.INVALID_ACTION(currentTurnUser, turnNumber, e.getMessage()));
             }
         }
-        updateResources(currentTurnUser);
-
         actionRequests = new ArrayList<>();
-        turnNumber++;
-
-        int idx = users.indexOf(currentTurnUser);
-        currentTurnUser = users.get(idx == users.size() - 1 ? 0 : ++idx);
 
         //checkEndConditions
+        return this;
+    }
+
+    public Game endTurn() {
+        updateResources(currentTurnUser);
+        turnNumber++;
+        int idx = users.indexOf(currentTurnUser);
+        currentTurnUser = users.get(idx == users.size() - 1 ? 0 : ++idx);
         return this;
     }
 

@@ -60,9 +60,9 @@ public class RecruitUnit implements UserAction {
                     placed = true;
                     break;
                 }
-                if(placed) {
-                    break;
-                }
+            }
+            if(placed) {
+                break;
             }
         }
         if(!placed) {
