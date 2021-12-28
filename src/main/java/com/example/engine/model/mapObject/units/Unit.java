@@ -8,8 +8,8 @@ public class Unit extends MapObject {
     private final Type type;
 
     @PersistenceConstructor
-    public Unit(String id, User user, int actionInTurnNumber, double defence, double offence, Type type) {
-        super(id, user, actionInTurnNumber, defence, offence);
+    public Unit(User user, int actionInTurnNumber, double defence, double offence, Type type) {
+        super(user, actionInTurnNumber, defence, offence);
         this.type = type;
     }
 

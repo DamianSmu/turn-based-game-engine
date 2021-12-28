@@ -61,10 +61,13 @@ public class ActionResolver {
     }
 
     private static MapObject getObject(Tile tile) {
-        if (tile.isEmpty()) {
-            throw new CannotResolveActionException("Tile in given direction is empty.");
+        if (tile.getUnit() != null) {
+            return tile.getUnit();
         }
-        return tile.getMapObject();
+        if (tile.getSettlement() != null) {
+            return tile.getSettlement();
+        }
+        throw new CannotResolveActionException("Tile in given direction is empty.");
     }
 
     private static PositionXY resolveDirection(GameMap gameMap, ActionType type, Unit unit) {

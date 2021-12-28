@@ -30,6 +30,10 @@ public class Attack implements UserAction {
             throw new CannotResolveActionException("Unit has taken action in current turn.");
         }
 
+        if (unit.getUser().equals(mapObject.getUser())) {
+            throw new CannotResolveActionException("Cannot attack. this object belongs to you.");
+        }
+
         PositionXY settlementPos = mapObject.getTile().getPosition();
         PositionXY pos = unit.getTile().getPosition();
         if (Math.abs(pos.getX() - settlementPos.getX()) > 1 || Math.abs(pos.getY() - settlementPos.getY()) > 1) {
@@ -41,13 +45,13 @@ public class Attack implements UserAction {
         unit.setDefence(unit.getDefence() - mapObject.getOffence() * (rand.nextDouble() + 0.5d));
 
         if (mapObject.getDefence() <= 0) {
-            unit.getTile().moveMapObject(unit, mapObject.getTile());
-            mapObject.getTile().deleteMapObject(mapObject);
+            unit.getTile().moveUnit(unit, mapObject.getTile());
+            mapObject.getTile().deleteMapObject();
             unit.setActionInTurnNumber(game.getTurnNumber());
         }
 
         if (unit.getDefence() <= 0) {
-            unit.getTile().deleteMapObject(unit);
+            unit.getTile().deleteMapObject();
         }
     }
 }

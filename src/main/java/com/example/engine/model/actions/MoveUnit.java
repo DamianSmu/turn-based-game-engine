@@ -40,8 +40,8 @@ public class MoveUnit implements UserAction {
 //        if(newTile.getType().equals(TileType.WATER)){
 //            throw new CannotResolveActionException("Cannot put on non empty tile.");
 //        }
-        if (newTile.isFreeToPlaceObject()) {
-            unit.getTile().moveMapObject(unit, newTile);
+        if (newTile.isFreeToMove()) {
+            unit.getTile().moveUnit(unit, newTile);
             unit.setActionInTurnNumber(game.getTurnNumber());
         } else {
             throw new CannotResolveActionException("Cannot put on non empty tile.");

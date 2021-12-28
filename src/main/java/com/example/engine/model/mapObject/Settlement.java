@@ -6,7 +6,7 @@ import org.springframework.data.annotation.PersistenceConstructor;
 
 public class Settlement extends MapObject implements ResourceApplier {
 
-    private static final double INIT_DEFENCE = 200;
+    private static final double INIT_DEFENCE = 10;
     private static final int GOLD_PRODUCTION_WITH_GOLD_DEPOSIT = 50;
     private static final int GOLD_PRODUCTION_WITHOUT_GOLD_DEPOSIT = 10;
     private static final int IRON_PRODUCTION_WITH_IRON_DEPOSIT = 50;
@@ -15,8 +15,8 @@ public class Settlement extends MapObject implements ResourceApplier {
     private int ironAmount;
 
     @PersistenceConstructor
-    public Settlement(String id, User user, int actionInTurnNumber, double defence, double offence, int goldAmount, int ironAmount) {
-        super(id, user, actionInTurnNumber, defence, offence);
+    public Settlement(User user, int actionInTurnNumber, double defence, double offence, int goldAmount, int ironAmount) {
+        super(user, actionInTurnNumber, defence, offence);
         this.goldAmount = goldAmount;
         this.ironAmount = ironAmount;
 

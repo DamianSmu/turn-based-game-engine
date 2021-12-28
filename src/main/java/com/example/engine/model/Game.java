@@ -116,14 +116,17 @@ public class Game {
     }
 
     private void updateResources(User user) {
-        gameMap.getTiles().stream().map(Tile::getMapObject).filter(x -> x instanceof ResourceApplier && x.getUser().equals(user)).forEach(x -> ((ResourceApplier) x).applyResources());
+        gameMap.getTiles().stream().map(Tile::getSettlement).filter(x -> x != null && x.getUser().equals(user)).forEach(x -> ((ResourceApplier) x).applyResources());
 
     }
 
     private GameState checkEndConditions() {
         int playersAlive = 0;
         for (User user : users) {
-            if (gameMap.getTiles().stream().anyMatch(x -> x.getMapObject().getUser().equals(user))) {
+            if (gameMap.getTiles().stream().anyMatch(x -> x.getUnit().getUser().equals(user))) {
+                playersAlive++;
+            }
+            if (gameMap.getTiles().stream().anyMatch(x -> x.getSettlement().getUser().equals(user))) {
                 playersAlive++;
             }
         }

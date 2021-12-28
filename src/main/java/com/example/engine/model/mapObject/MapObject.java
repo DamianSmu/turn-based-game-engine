@@ -13,8 +13,6 @@ import java.util.UUID;
 
 public class MapObject {
 
-    private String id = UUID.randomUUID().toString();
-
     @DBRef
     private User user;
 
@@ -34,16 +32,11 @@ public class MapObject {
     }
 
     @PersistenceConstructor
-    public MapObject(String id, User user, int actionInTurnNumber, double defence, double offence) {
-        this.id = id;
+    public MapObject(User user, int actionInTurnNumber, double defence, double offence) {
         this.user = user;
         this.actionInTurnNumber = actionInTurnNumber;
         this.defence = defence;
         this.offence = offence;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public User getUser() {

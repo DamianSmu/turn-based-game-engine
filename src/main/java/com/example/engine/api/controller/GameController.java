@@ -159,10 +159,7 @@ public class GameController {
             game.addUserActionRequest(new ActionRequest(action.getActionType(), new PositionXY(action.getX(), action.getY())));
         }
         gameRepository.save(game.takeTurn());
-        long invalidActions = game.getGameLog().getForTurnAndUser(game.getTurnNumber() - 1, user).filter(x -> x.getTag().equals(LogEntry.INVALID_ACTION)).count();
-        if(body.isEmpty()) {
-            System.out.println("");
-        }
+        long invalidActions = game.getGameLog().getForTurnAndUser(game.getTurnNumber(), user).filter(x -> x.getTag().equals(LogEntry.INVALID_ACTION)).count();
         if(invalidActions > 1){
             System.out.println(invalidActions);
         }

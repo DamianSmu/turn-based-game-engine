@@ -30,10 +30,8 @@ public class PutOnSettlement implements UserAction {
         }
 
         Tile tile = settlers.getTile();
-        if (tile.equals(settlers.getTile())) {
-            tile.setMapObject(new Settlement(user));
-            settlers.setTile(null);
-            settlers.setUser(null);
+        if (tile.getSettlement() == null) {
+            tile.setSettlement(new Settlement(user));
         } else {
             throw new CannotResolveActionException("Cannot put on non empty tile.");
         }

@@ -26,6 +26,6 @@ public class GameLog implements Serializable {
     }
 
     public Stream<LogEntry> getForTurnAndUser(int turn, User user) {
-        return log.stream().filter(entry -> entry.getTurnNumber() == turn && entry.getUser().equals(user));
+        return log.stream().filter(entry -> entry.getTurnNumber() == turn && entry.getUser().equals(user.getUsername()));
     }
 }

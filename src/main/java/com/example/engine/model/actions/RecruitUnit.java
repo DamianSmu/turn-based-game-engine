@@ -48,26 +48,7 @@ public class RecruitUnit implements UserAction {
                 throw new CannotResolveActionException("Unknown unit type.");
         }
 
-        int[] xx = new int[]{0, 1, -1};
-        int[] yy = new int[]{1, 0, -1};
-
-        boolean placed = false;
-        for (int x : xx){
-            for (int y : yy){
-                PositionXY newPos = new PositionXY(settlement.getTile().getPosition().getX() + x, settlement.getTile().getPosition().getY() + y);
-                if(game.getMap().getTileFromPosition(newPos).isEmpty()) {
-                    game.getMap().getTileFromPosition(newPos).setMapObject(unit);
-                    placed = true;
-                    break;
-                }
-            }
-            if(placed) {
-                break;
-            }
-        }
-        if(!placed) {
-            throw new CannotResolveActionException("No tile to place unit.");
-        }
+        settlement.getTile().setUnit(unit);
 
         settlement.setActionInTurnNumber(game.getTurnNumber());
     }

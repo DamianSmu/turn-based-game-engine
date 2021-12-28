@@ -3,6 +3,7 @@ package com.example.engine.model.mapObject;
 import com.example.engine.model.GameMap;
 import com.example.engine.model.User;
 import com.example.engine.model.mapObject.units.Settlers;
+import com.example.engine.model.mapObject.units.Unit;
 import com.example.engine.model.tile.Tile;
 import com.example.engine.model.tile.TileType;
 import com.example.engine.model.utils.PositionXY;
@@ -43,7 +44,12 @@ public class ObjectsGenerator {
         while (!placed) {
             Tile tile = list.get(random.nextInt(list.size()));
             if (tile.isEmpty()) {
-                tile.setMapObject(mapObject);
+                if(mapObject instanceof Settlement){
+                    tile.setSettlement((Settlement) mapObject);
+                }
+                if(mapObject instanceof Unit){
+                    tile.setUnit((Unit) mapObject);
+                }
                 mapObject.setTile(tile);
                 placed = true;
             }
