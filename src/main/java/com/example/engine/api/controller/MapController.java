@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("api/game")
+@RequestMapping("api/map")
 public class MapController {
 
     private final GameRepository gameRepository;
@@ -25,7 +25,7 @@ public class MapController {
         this.gameRepository = gameRepository;
     }
 
-    @GetMapping("/mapPNG/{id}")
+    @GetMapping("/PNG/{id}")
     public void getMap(@PathVariable String id, HttpServletResponse response) throws IOException {
         Game game = gameRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Game not found"));
         if (game.getState() != GameState.STARTED) {

@@ -38,8 +38,8 @@ public class GameController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<?> getSAll() {
+    @GetMapping("/")
+    public ResponseEntity<?> getAll() {
         List<Game> games = gameRepository.findAll();
         List<GameStatusResponseDTO> responses = new ArrayList<>();
         for (Game game : games) {
@@ -148,7 +148,7 @@ public class GameController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{id}/postActionAndTakeTurn")
+    @PostMapping("/{id}/act")
     public ResponseEntity<?> postActionAndTakeTurn(Authentication authentication, @PathVariable String id, @RequestBody List<ActionRequestDTO> body) {
         Game game = gameRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Game id not found"));
         User user = userService.getUser(authentication);

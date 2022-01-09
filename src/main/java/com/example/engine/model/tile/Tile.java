@@ -104,4 +104,9 @@ public class Tile {
         this.settlement = settlement;
         settlement.setTile(this);
     }
+
+    @Override
+    public String toString() {
+        return "Tile{" + "type=" + type + ", position=" + position.toString() + ", unit=" + unit + ", settlement=" + settlement + '}';
+    }
 }

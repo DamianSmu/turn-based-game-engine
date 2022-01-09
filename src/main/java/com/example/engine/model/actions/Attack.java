@@ -44,6 +44,8 @@ public class Attack implements UserAction {
         mapObject.setDefence(mapObject.getDefence() - unit.getOffence() * (rand.nextDouble() + 0.5d));
         unit.setDefence(unit.getDefence() - mapObject.getOffence() * (rand.nextDouble() + 0.5d));
 
+        System.out.println(unit.getTile().getPosition().toString()+ "  " + mapObject.getTile().getPosition().toString());
+
         if (mapObject.getDefence() <= 0) {
             unit.getTile().moveUnit(unit, mapObject.getTile());
             mapObject.getTile().deleteMapObject();

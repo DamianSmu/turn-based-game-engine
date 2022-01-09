@@ -37,13 +37,6 @@ public class UserController {
                 Role.ROLE_CLIENT));
     }
 
-    @DeleteMapping(value = "/{username}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> delete(@PathVariable String username) {
-        userService.delete(username);
-        return ResponseEntity.noContent().build();
-    }
-
     @GetMapping(value = "/me")
     public ResponseEntity<?> whoami(HttpServletRequest req) {
         return ResponseEntity.ok(userService.whoami(req));
