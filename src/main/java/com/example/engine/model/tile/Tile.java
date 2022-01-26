@@ -1,15 +1,11 @@
 package com.example.engine.model.tile;
 
 
-import com.example.engine.model.mapObject.MapObject;
 import com.example.engine.model.mapObject.Settlement;
 import com.example.engine.model.mapObject.units.Unit;
 import com.example.engine.model.utils.PositionXY;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.PersistenceConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class Tile {
@@ -30,10 +26,10 @@ public class Tile {
         this.position = position;
         this.unit = unit;
         this.settlement = settlement;
-        if(unit != null){
+        if (unit != null) {
             unit.setTile(this);
         }
-        if(settlement != null){
+        if (settlement != null) {
             settlement.setTile(this);
         }
     }

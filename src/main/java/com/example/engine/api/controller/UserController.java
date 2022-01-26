@@ -7,7 +7,6 @@ import com.example.engine.api.security.Role;
 import com.example.engine.api.service.UserService;
 import com.example.engine.model.User;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,11 +29,7 @@ public class UserController {
 
     @PostMapping("/signup")
     public TokenResponseDTO signup(@RequestBody UserRequestDTO user) {
-        return userService.signup(new User(
-                user.getUsername(),
-                user.getEmail(),
-                user.getPassword(),
-                Role.ROLE_CLIENT));
+        return userService.signup(new User(user.getUsername(), user.getEmail(), user.getPassword(), Role.ROLE_CLIENT));
     }
 
     @GetMapping(value = "/me")

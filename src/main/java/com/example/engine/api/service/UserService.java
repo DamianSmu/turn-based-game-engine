@@ -34,9 +34,7 @@ public class UserService {
     public String signin(String username, String password) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            return jwtTokenProvider.createToken(username, Collections.singletonList(userRepository.findByUsername(username).orElseThrow(
-                    () -> new ResponseException("User not found in db", HttpStatus.BAD_REQUEST))
-                    .getRole()));
+            return jwtTokenProvider.createToken(username, Collections.singletonList(userRepository.findByUsername(username).orElseThrow(() -> new ResponseException("User not found in db", HttpStatus.BAD_REQUEST)).getRole()));
         } catch (AuthenticationException e) {
             throw new ResponseException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
         }
@@ -62,14 +60,11 @@ public class UserService {
 
 
     public User whoami(HttpServletRequest req) {
-        return userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req))).orElseThrow(
-                () -> new ResponseException("User not found in db", HttpStatus.BAD_REQUEST));
+        return userRepository.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req))).orElseThrow(() -> new ResponseException("User not found in db", HttpStatus.BAD_REQUEST));
     }
 
     public String refresh(String username) {
-        return jwtTokenProvider.createToken(username, Collections.singletonList(userRepository.findByUsername(username).orElseThrow(
-                () -> new ResponseException("User not found in db", HttpStatus.BAD_REQUEST))
-                .getRole()));
+        return jwtTokenProvider.createToken(username, Collections.singletonList(userRepository.findByUsername(username).orElseThrow(() -> new ResponseException("User not found in db", HttpStatus.BAD_REQUEST)).getRole()));
     }
 
     public User getUser(Authentication authentication) {

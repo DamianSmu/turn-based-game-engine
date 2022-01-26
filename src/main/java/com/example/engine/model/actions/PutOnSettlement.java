@@ -2,8 +2,6 @@ package com.example.engine.model.actions;
 
 import com.example.engine.model.Game;
 import com.example.engine.model.User;
-import com.example.engine.model.logs.GameLog;
-import com.example.engine.model.logs.LogEntry;
 import com.example.engine.model.mapObject.Settlement;
 import com.example.engine.model.mapObject.units.Settlers;
 import com.example.engine.model.tile.Tile;

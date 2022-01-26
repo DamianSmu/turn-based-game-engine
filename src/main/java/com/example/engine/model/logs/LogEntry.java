@@ -3,11 +3,11 @@ package com.example.engine.model.logs;
 import com.example.engine.model.User;
 
 public class LogEntry {
+    public static final String INVALID_ACTION = "INVALID_ACTION";
     private final String user;
     private final int turnNumber;
     private final String message;
     private final String tag;
-    public static final String INVALID_ACTION = "INVALID_ACTION";
 
     public LogEntry(String user, int turnNumber, String message, String tag) {
         this.user = user;

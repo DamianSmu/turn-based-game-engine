@@ -2,11 +2,8 @@ package com.example.engine.model.actions;
 
 import com.example.engine.model.Game;
 import com.example.engine.model.User;
-import com.example.engine.model.logs.GameLog;
-import com.example.engine.model.logs.LogEntry;
 import com.example.engine.model.mapObject.units.Unit;
 import com.example.engine.model.tile.Tile;
-import com.example.engine.model.tile.TileType;
 import com.example.engine.model.utils.PositionXY;
 
 public class MoveUnit implements UserAction {
@@ -37,9 +34,6 @@ public class MoveUnit implements UserAction {
         }
 
         Tile newTile = game.getMap().getTileXY(newX, newY);
-//        if(newTile.getType().equals(TileType.WATER)){
-//            throw new CannotResolveActionException("Cannot put on non empty tile.");
-//        }
         if (newTile.isFreeToMove()) {
             unit.getTile().moveUnit(unit, newTile);
             unit.setActionInTurnNumber(game.getTurnNumber());

@@ -2,7 +2,6 @@ package com.example.engine.model.utils;
 
 import com.example.engine.model.GameMap;
 import com.example.engine.model.mapObject.MapObject;
-import com.example.engine.model.mapObject.Settlement;
 import com.example.engine.model.mapObject.units.Settlers;
 import com.example.engine.model.mapObject.units.Warriors;
 import com.example.engine.model.tile.Tile;

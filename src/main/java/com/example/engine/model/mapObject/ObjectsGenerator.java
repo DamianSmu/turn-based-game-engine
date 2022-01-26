@@ -44,10 +44,10 @@ public class ObjectsGenerator {
         while (!placed) {
             Tile tile = list.get(random.nextInt(list.size()));
             if (tile.isEmpty()) {
-                if(mapObject instanceof Settlement){
+                if (mapObject instanceof Settlement) {
                     tile.setSettlement((Settlement) mapObject);
                 }
-                if(mapObject instanceof Unit){
+                if (mapObject instanceof Unit) {
                     tile.setUnit((Unit) mapObject);
                 }
                 mapObject.setTile(tile);
