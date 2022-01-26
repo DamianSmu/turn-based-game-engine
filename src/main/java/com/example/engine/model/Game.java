@@ -24,6 +24,8 @@ import java.util.Random;
 
 public class Game {
 
+    private static final int GAM_MAP_SIZE = 20;
+
     @Id
     private String id;
     @JsonIgnore
@@ -68,7 +70,7 @@ public class Game {
         this.turnNumber = 0;
         gameLog = new GameLog();
         state = GameState.STARTED;
-        gameMap = new GameMap(20, seed);
+        gameMap = new GameMap(GAM_MAP_SIZE, seed);
         gameMap.createTiles();
         ObjectsGenerator.placeResources(gameMap, seed, TileType.GOLD);
         ObjectsGenerator.placeResources(gameMap, seed, TileType.IRON);
